@@ -13,3 +13,99 @@
  *= require_tree .
  *= require_self
  */
+
+/* Modifier Card Styles */
+.modifier-card {
+  width: 32px;
+  height: 44px;
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  font-weight: bold;
+  font-size: 14px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.modifier-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Positive Card Default Styling */
+.modifier-card.positive-card {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  border-color: #34d399;
+}
+
+/* Negative Card Default Styling */
+.modifier-card.negative-card {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+  border-color: #f87171;
+}
+
+/* Inactive State */
+.modifier-card.inactive {
+  background: linear-gradient(135deg, #374151, #4b5563);
+  color: #9ca3af;
+  border-color: rgba(156, 163, 175, 0.4);
+}
+
+/* Single Positive State */
+.modifier-card.single-positive {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  border-color: #34d399;
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+/* Double Positive State */
+.modifier-card.double-positive {
+  background: linear-gradient(135deg, #047857, #065f46);
+  color: white;
+  border-color: #10b981;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+/* Single Negative State */
+.modifier-card.single-negative {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+  border-color: #f87171;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+/* Double Negative State */
+.modifier-card.double-negative {
+  background: linear-gradient(135deg, #991b1b, #7f1d1d);
+  color: white;
+  border-color: #ef4444;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+}
+
+.card-symbol {
+  font-weight: bold;
+  font-size: 16px;
+  color: inherit;
+}
+
+/* Card flip animation */
+.modifier-card {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+
+.modifier-card:hover {
+  transform: translateY(-2px) rotateY(5deg);
+}
+
+.modifier-card:active {
+  transform: translateY(0) rotateY(0deg);
+}
