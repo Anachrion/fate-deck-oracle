@@ -1,38 +1,84 @@
-<div class="container">
-  <h1>Fate Deck Oracle</h1>
-  
-  <%= form_with url: calculate_path, method: :post, local: true do |form| %>
-    <div class="form-group">
-      <%= form.label :attacker_stat, "Attacker Value:" %>
-      <%= form.number_field :attacker_stat, value: @attacker_stat, class: "form-control", required: true %>
+<div class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-5xl font-bold text-white mb-4 tracking-tight">
+        Fate Deck Oracle
+      </h1>
+      <p class="text-xl text-slate-300 max-w-md mx-auto">
+        Calculate your success rates in epic duels with precision and style
+      </p>
     </div>
-    
-    <div class="form-group">
-      <%= form.label :defender_stat, "Defender Value:" %>
-      <%= form.number_field :defender_stat, value: @defender_stat, class: "form-control", required: true %>
-    </div>
-    
-    <%= form.submit "Calculate", class: "btn btn-primary" %>
-  <% end %>
-  
-  <% if @duel_data %>
-    <div class="result">
-      <h2>Success rate: <%= @duel_data["global_success_rate"] %>%</h2>
 
-      <h3>Success rate with a raise: <%= @duel_data["global_success_rate_with_raise"] %>%</h2>
-      
-      <div class="result-details">
-        <div class="result-row">
-          <span class="label">Attacker Value:</span>
-          <span class="value"><%= @duel_data["attacker_stat"] %></span>
+    <!-- Form Card -->
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mb-8">
+      <%= form_with url: calculate_path, method: :post, local: true, class: "space-y-6" do |form| %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= form.label :attacker_stat, "Attacker Value", class: "block text-sm font-semibold text-white mb-2" %>
+            <%= form.number_field :attacker_stat, 
+                value: @attacker_stat, 
+                class: "w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200", 
+                placeholder: "Enter attacker value",
+                required: true %>
+          </div>
+          
+          <div>
+            <%= form.label :defender_stat, "Defender Value", class: "block text-sm font-semibold text-white mb-2" %>
+            <%= form.number_field :defender_stat, 
+                value: @defender_stat, 
+                class: "w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200", 
+                placeholder: "Enter defender value",
+                required: true %>
+          </div>
         </div>
         
-        <div class="result-row">
-          <span class="label">Defender Value:</span>
-          <span class="value"><%= @duel_data["defender_stat"] %></span>
-        </div>
-        
-      </div>
+        <%= form.submit "Calculate Success Rate", 
+            class: "w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-slate-900 shadow-lg" %>
+      <% end %>
     </div>
-  <% end %>
+
+    <!-- Results Card -->
+    <% if @duel_data %>
+      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
+        <div class="text-center mb-8">
+          <h2 class="text-3xl font-bold text-white mb-2">
+            Success Rate: 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+              <%= @duel_data["global_success_rate"] %>%
+            </span>
+          </h2>
+          
+          <h3 class="text-xl text-slate-300 mb-6">
+            With a raise: 
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+              <%= @duel_data["global_success_rate_with_raise"] %>%
+            </span>
+          </h3>
+        </div>
+        
+        <div class="bg-white/5 rounded-xl p-6 border border-white/10">
+          <h4 class="text-lg font-semibold text-white mb-4 text-center">Duel Details</h4>
+          <div class="space-y-4">
+            <div class="flex justify-between items-center py-3 px-4 bg-white/5 rounded-lg">
+              <span class="text-slate-300 font-medium">Attacker Value:</span>
+              <span class="text-white font-bold text-lg"><%= @duel_data["attacker_stat"] %></span>
+            </div>
+            
+            <div class="flex justify-between items-center py-3 px-4 bg-white/5 rounded-lg">
+              <span class="text-slate-300 font-medium">Defender Value:</span>
+              <span class="text-white font-bold text-lg"><%= @duel_data["defender_stat"] %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Footer -->
+    <div class="text-center mt-12">
+      <p class="text-slate-400 text-sm">
+        Powered by the mystical forces of probability and Tailwind CSS
+      </p>
+    </div>
+  </div>
 </div>
