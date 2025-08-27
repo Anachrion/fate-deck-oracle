@@ -30,6 +30,11 @@
   font-size: 14px;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
   transform-style: preserve-3d;
+  
+  /* DEFAULT STATE: Always grey */
+  background: linear-gradient(135deg, #374151, #4b5563);
+  color: #9ca3af;
+  border-color: rgba(156, 163, 175, 0.4);
 }
 
 .modifier-card:hover {
@@ -41,60 +46,8 @@
   transform: translateY(0) rotateY(0deg);
 }
 
-/* Positive Card Default Styling */
-.modifier-card.positive-card {
-  background: linear-gradient(135deg, #059669, #10b981);
-  color: white;
-  border-color: #34d399;
-}
-
-/* Negative Card Default Styling */
-.modifier-card.negative-card {
-  background: linear-gradient(135deg, #dc2626, #ef4444);
-  color: white;
-  border-color: #f87171;
-}
-
-/* Inactive State */
-.modifier-card.inactive {
-  background: linear-gradient(135deg, #374151, #4b5563);
-  color: #9ca3af;
-  border-color: rgba(156, 163, 175, 0.4);
-}
-
-/* Single Positive State */
-.modifier-card.single-positive {
-  background: linear-gradient(135deg, #059669, #10b981);
-  color: white;
-  border-color: #34d399;
-  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
-}
-
-/* Double Positive State */
-.modifier-card.double-positive {
-  background: linear-gradient(135deg, #047857, #065f46);
-  color: white;
-  border-color: #10b981;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
-}
-
-/* Single Negative State */
-.modifier-card.single-negative {
-  background: linear-gradient(135deg, #dc2626, #ef4444);
-  color: white;
-  border-color: #f87171;
-  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
-}
-
-/* Double Negative State */
-.modifier-card.double-negative {
-  background: linear-gradient(135deg, #991b1b, #7f1d1d);
-  color: white;
-  border-color: #ef4444;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
-}
-
-/* Flash effect classes - HIGH PRIORITY */
+/* Remove all the permanent modifier states - cards stay grey by default */
+/* Flash effect classes - HIGH PRIORITY - these will override the default grey */
 .modifier-card.flash-positive {
   background: linear-gradient(135deg, #10b981, #059669) !important;
   border-color: #10b981 !important;

@@ -52,38 +52,8 @@ export default class extends Controller {
   }
 
   updateCardDisplay() {
-    // Update attacker modifier display
-    this.updateModifierDisplay(this.attackerModInputTarget.value, this.attackerModPositiveTarget, this.attackerModNegativeTarget)
-    
-    // Update defender modifier display
-    this.updateModifierDisplay(this.defenderModInputTarget.value, this.defenderModPositiveTarget, this.defenderModNegativeTarget)
-    
-    // Update indicator cards
+    // Update indicator cards only - no more permanent modifier states
     this.updateIndicators()
-  }
-
-  updateModifierDisplay(value, positiveCard, negativeCard) {
-    // Remove all existing classes from both cards
-    positiveCard.classList.remove("inactive", "single-positive", "double-positive", "single-negative", "double-negative")
-    negativeCard.classList.remove("inactive", "single-positive", "double-positive", "single-negative", "double-negative")
-    
-    // Add appropriate classes based on value
-    if (value === "") {
-      positiveCard.classList.add("inactive")
-      negativeCard.classList.add("inactive")
-    } else if (value === "+") {
-      positiveCard.classList.add("single-positive")
-      negativeCard.classList.add("inactive")
-    } else if (value === "++") {
-      positiveCard.classList.add("double-positive")
-      negativeCard.classList.add("inactive")
-    } else if (value === "-") {
-      positiveCard.classList.add("inactive")
-      negativeCard.classList.add("single-negative")
-    } else if (value === "--") {
-      positiveCard.classList.add("inactive")
-      negativeCard.classList.add("double-negative")
-    }
   }
 
   updateIndicators() {
