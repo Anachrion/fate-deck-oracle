@@ -1,0 +1,36 @@
+<div class="container">
+  <h1>Fate Deck Oracle</h1>
+  
+  <%= form_with url: calculate_path, method: :post, local: true do |form| %>
+    <div class="form-group">
+      <%= form.label :attacker_value, "Attacker Value:" %>
+      <%= form.number_field :attacker_value, value: @attacker_value, class: "form-control", required: true %>
+    </div>
+    
+    <div class="form-group">
+      <%= form.label :defender_value, "Defender Value:" %>
+      <%= form.number_field :defender_value, value: @defender_value, class: "form-control", required: true %>
+    </div>
+    
+    <%= form.submit "Calculate", class: "btn btn-primary" %>
+  <% end %>
+  
+  <% if @duel_data %>
+    <div class="result">
+      <h2>Duel Result: <%= @duel_data["result"] %></h2>
+      
+      <div class="result-details">
+        <div class="result-row">
+          <span class="label">Attacker Value:</span>
+          <span class="value"><%= @duel_data["attacker_value"] %></span>
+        </div>
+        
+        <div class="result-row">
+          <span class="label">Defender Value:</span>
+          <span class="value"><%= @duel_data["defender_value"] %></span>
+        </div>
+        
+      </div>
+    </div>
+  <% end %>
+</div>
