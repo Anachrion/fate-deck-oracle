@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe DuelCalculationService do
@@ -41,7 +43,7 @@ RSpec.describe DuelCalculationService do
         described_class.new(
           attacker_stat: 5,
           defender_stat: 3,
-          attacker_flips: [:+, :+],
+          attacker_flips: %i[+ +],
           defender_flips: [:-]
         )
       end
@@ -68,13 +70,13 @@ RSpec.describe DuelCalculationService do
         described_class.new(
           attacker_stat: 5,
           defender_stat: 3,
-          attacker_flips: [:+, :+],
+          attacker_flips: %i[+ +],
           defender_flips: []
         )
       end
 
       it 'returns correct values' do
-        number_of_cards, flip_symbol = service_with_positive_flips.send(:check_flips_consistency, flips: [:+, :+])
+        number_of_cards, flip_symbol = service_with_positive_flips.send(:check_flips_consistency, flips: %i[+ +])
         expect(number_of_cards).to eq(3)
         expect(flip_symbol).to eq(:+)
       end
@@ -108,9 +110,9 @@ RSpec.describe DuelCalculationService do
       end
 
       it 'raises error for unknown flip values' do
-        expect {
+        expect do
           service_with_invalid_flips.send(:check_flips_consistency, flips: [:invalid])
-        }.to raise_error(RuntimeError, 'Unknown flip value')
+        end.to raise_error(RuntimeError, 'Unknown flip value')
       end
     end
 
@@ -119,15 +121,15 @@ RSpec.describe DuelCalculationService do
         described_class.new(
           attacker_stat: 5,
           defender_stat: 3,
-          attacker_flips: [:+, :-],
+          attacker_flips: %i[+ -],
           defender_flips: []
         )
       end
 
       it 'raises error for mixed flip types' do
-        expect {
-          service_with_mixed_flips.send(:check_flips_consistency, flips: [:+, :-])
-        }.to raise_error(RuntimeError, "You can't mix positive and negative flips")
+        expect do
+          service_with_mixed_flips.send(:check_flips_consistency, flips: %i[+ -])
+        end.to raise_error(RuntimeError, "You can't mix positive and negative flips")
       end
     end
   end
@@ -142,7 +144,7 @@ RSpec.describe DuelCalculationService do
     it 'returns correct number of combinations for 3 cards' do
       combinations = service.send(:combinations, number_of_cards: 3)
       expect(combinations).to be_an(Array)
-      expect(combinations.length).to eq(24804) # C(54, 3) = 24804
+      expect(combinations.length).to eq(24_804) # C(54, 3) = 24804
     end
   end
 
@@ -184,9 +186,9 @@ RSpec.describe DuelCalculationService do
 
     context 'with multiple cards without flip' do
       it 'raises error for inconsistent params' do
-        expect {
+        expect do
           service.send(:determine_draw_value, cards: [3, 7], flip: nil)
-        }.to raise_error(RuntimeError, 'Inconsistent params')
+        end.to raise_error(RuntimeError, 'Inconsistent params')
       end
     end
   end
@@ -197,13 +199,13 @@ RSpec.describe DuelCalculationService do
         described_class.new(
           attacker_stat: 5,
           defender_stat: 3,
-          attacker_flips: [:+, :+],
+          attacker_flips: %i[+ +],
           defender_flips: []
         )
       end
 
       it 'processes attacker flips correctly' do
-        result = service_with_attacker_flips.send(:process_combinations, flips: [:+, :+])
+        result = service_with_attacker_flips.send(:process_combinations, flips: %i[+ +])
         expect(result).to be_an(Array)
         expect(result).to all(be_an(Integer))
       end
@@ -233,7 +235,7 @@ RSpec.describe DuelCalculationService do
         described_class.new(
           attacker_stat: 8,
           defender_stat: 6,
-          attacker_flips: [:+, :+],
+          attacker_flips: %i[+ +],
           defender_flips: [:-]
         )
       end

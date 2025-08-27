@@ -1,0 +1,360 @@
+inherit_from: .rubocop_todo.yml
+
+require:
+  - rubocop-rspec_rails
+  - ./support/rubocop/cop/airbnb/factory_class_use_string.rb
+  - ./support/rubocop/cop/airbnb/opt_arg_parameters.rb
+  - ./support/rubocop/cop/airbnb/simple_unless.rb
+  - ./support/rubocop/cop/custom/naming/english_language.rb
+
+plugins:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-factory_bot
+  - rubocop-graphql
+  - rubocop-rspec
+
+inherit_mode:
+  merge:
+    - Include
+    - Exclude
+    - AllowedNames
+    - AllowedIdentifiers
+
+AllCops:
+  CacheRootDirectory: "tmp/cache"
+  Exclude:
+    - "bin/*"
+    - "db/schema.rb"
+    - "db/**/schema.rb"
+    - "vendor/bundle/**/*"
+  NewCops: enable
+  TargetRubyVersion: 3.2
+
+#
+# Custom
+#
+
+Custom/Naming/EnglishLanguage:
+  CheckStrings: true
+  FlaggedTerms:
+    abandonned:
+      Suggestions: ["abandoned"]
+    authorisation:
+      Suggestions: ["authorization"]
+    availaible:
+      Suggestions: ["available"]
+    behaviour:
+      Suggestions: ["behavior"]
+    cancelled:
+      Suggestions: ["canceled"]
+    metter:
+      Suggestions: ["meter"]
+    occp:
+      Suggestions: ["ocpp"]
+    occurence:
+      Suggestions: ["occurrence"]
+    unkown:
+      Suggestions: ["unknown"]
+
+#
+# GraphQL
+#
+
+GraphQL/ArgumentDescription:
+  Enabled: false
+
+GraphQL/ExtractType:
+  Enabled: false
+
+GraphQL/FieldDefinitions:
+  EnforcedStyle: define_resolver_after_definition
+
+GraphQL/FieldDescription:
+  Enabled: false
+
+GraphQL/MaxComplexitySchema:
+  Enabled: false
+
+GraphQL/MaxDepthSchema:
+  Enabled: false
+
+GraphQL/ObjectDescription:
+  Enabled: false
+
+GraphQL/ResolverMethodLength:
+  Max: 15
+
+#
+# Layout
+#
+
+Layout/ArgumentAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/ArrayAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/CaseIndentation:
+  Enabled: false
+
+Layout/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines_except_namespace
+
+Layout/EmptyLinesAroundModuleBody:
+  EnforcedStyle: empty_lines_except_namespace
+
+Layout/EndAlignment:
+  AutoCorrect: true
+
+Layout/ExtraSpacing:
+  AllowForAlignment: false
+
+Layout/FirstArgumentIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstArrayElementLineBreak:
+  Enabled: true # default: false
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementLineBreak:
+  Enabled: true # default: false
+
+Layout/FirstMethodArgumentLineBreak:
+  Enabled: true # default: false
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: key
+  EnforcedColonStyle: key
+  EnforcedLastArgumentHashStyle: ignore_implicit
+
+Layout/LineEndStringConcatenationIndentation:
+  EnforcedStyle: indented
+
+Layout/LineLength:
+  Max: 120 # default: 80
+  AllowedPatterns:
+    - "^ *#" # comments
+    - "^.{,120} # .*" # line ending comments
+  Exclude:
+    - "db/migrate/*"
+
+Layout/MultilineAssignmentLayout:
+  Enabled: true # default: false
+  EnforcedStyle: new_line
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Layout/ParameterAlignment:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/SpaceAroundOperators:
+  AllowForAlignment: false
+
+Layout/SpaceBeforeFirstArg:
+  AllowForAlignment: false
+
+#
+# Lint
+#
+
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: false # default: true
+
+Lint/SuppressedException:
+  AllowComments: true
+
+Lint/UnusedMethodArgument:
+  AllowUnusedKeywordArguments: true
+  IgnoreEmptyMethods: true
+  IgnoreNotImplementedMethods: true
+
+#
+# Metrics
+#
+
+Metrics/AbcSize:
+  Enabled: false # default: true
+  Exclude:
+    - "db/migrate/**/*"
+
+Metrics/BlockLength:
+  Enabled: false # default: true
+  Exclude:
+    - "config/routes.rb"
+    - "config/routes/*"
+    - "lib/tasks/**/*"
+    - "Guardfile"
+
+Metrics/ClassLength:
+  Enabled: false # default: true
+
+Metrics/CyclomaticComplexity:
+  Enabled: false # default: true
+
+Metrics/MethodLength:
+  Enabled: false # default: true
+  Exclude:
+    - "db/migrate/*"
+
+Metrics/ModuleLength:
+  Enabled: false # default: true
+
+Metrics/PerceivedComplexity:
+  Enabled: false # default: true
+
+#
+# Naming
+#
+
+Naming/AccessorMethodName:
+  Enabled: false # default: true
+
+Naming/InclusiveLanguage:
+  Enabled: false # default: true
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - as
+    - f
+
+Naming/PredicateMethod:
+  Enabled: false # default: true
+
+Naming/PredicatePrefix:
+  Exclude:
+    - "app/graphql/types/**/*"
+
+Naming/VariableNumber:
+  EnforcedStyle: snake_case
+  AllowedIdentifiers:
+    - google_oauth2
+
+# Disabled cause in ruby 3.3, we need to declare block to send it to sub-block.
+# https://rubyreferences.github.io/rubychanges/3.3.html#standalone-it-in-blocks-will-become-anonymous-argument-in-ruby-34
+# https://github.com/go-Electra/electra-backend/commit/5780983a0e2b624bc7cc308e2489983dc332296a
+Naming/BlockForwarding:
+  Enabled: false
+
+#
+# Performance
+#
+
+Performance/Casecmp:
+  Enabled: false # default: true
+
+Performance/OpenStruct:
+  Enabled: true # default: false
+
+#
+# Rails
+#
+
+Rails/ActionOrder:
+  Enabled: false
+
+# TODO: remove this rule, but a refacto is necessary to get rid 'development?' and 'test?'
+Rails/EnvLocal:
+  Enabled: false
+
+Rails/HasAndBelongsToMany:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/BulkChangeTable:
+  Enabled: false
+
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - production
+    - staging
+    - test
+    - sandbox
+    - perf
+
+#
+# Style
+#
+
+Style/AndOr:
+  EnforcedStyle: conditionals
+
+# Disabled, implicit args could be confusing
+Style/ArgumentsForwarding:
+  Enabled: false # default: true
+
+Style/AsciiComments:
+  Enabled: false # default: true
+
+Style/AutoResourceCleanup:
+  Enabled: true # default: false
+
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+
+Style/CollectionMethods:
+  Enabled: true # default: false
+
+Style/DateTime:
+  Enabled: true # default: false
+
+Style/Documentation:
+  Enabled: false # default: true
+
+# Ensure that frozen string literal warning is autocorrected
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  SafeAutoCorrect: true
+
+Style/HashAsLastArrayItem:
+  EnforcedStyle: braces
+
+Style/MethodCalledOnDoEndBlock:
+  Enabled: true # default: false
+
+Style/ModuleFunction:
+  EnforcedStyle: extend_self
+
+Style/MultilineBlockChain:
+  Enabled: false # default: true
+
+Style/ReturnNil:
+  Enabled: true # default: false
+
+Style/SafeNavigationChainLength:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: no_comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+#
+# Rspec
+#
+
+RSpec/DescribeClass:
+  Exclude:
+    - spec/tasks/**/*

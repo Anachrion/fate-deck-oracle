@@ -8,8 +8,21 @@ export default class extends Controller {
   }
 
   connect() {
+    console.log("Modifier cards controller connected")
     // Initialize indicators based on existing values on page load
     this.updateIndicators()
+    
+    // Listen for Turbo events to refresh indicators after form submission
+    document.addEventListener('turbo:render', () => {
+      console.log("Turbo render event fired")
+      this.updateIndicators()
+    })
+    
+    // Also listen for turbo:stream-render for turbo_stream responses
+    document.addEventListener('turbo:stream-render', () => {
+      console.log("Turbo stream render event fired")
+      this.updateIndicators()
+    })
   }
 
   addPositive(event) {

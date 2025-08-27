@@ -1,18 +1,18 @@
-class DuelCalculationService
+# frozen_string_literal: true
 
+class DuelCalculationService
   FATE_DECK = (1..13).to_a * 4 + [0, 14]
 
-  def initialize(attacker_stat:, defender_stat:, attacker_flips: "", defender_flips: "")
+  def initialize(attacker_stat:, defender_stat:, attacker_flips: '', defender_flips: '')
     @attacker_stat = attacker_stat
     @defender_stat = defender_stat
     @attacker_flips = attacker_flips
     @defender_flips = defender_flips
   end
-  
+
   attr_reader :attacker_stat, :defender_stat, :attacker_flips, :defender_flips
 
-  def call 
-    
+  def call
     attacker_combinations = process_combinations(flips: attacker_flips)
     defender_combinations = process_combinations(flips: defender_flips)
 
@@ -33,26 +33,24 @@ class DuelCalculationService
     }
   end
 
-
   def process_combinations(flips:)
-    number_of_cards, flip_symbol = check_flips_consistency(flips:) 
+    number_of_cards, flip_symbol = check_flips_consistency(flips:)
 
     draw_results = combinations(number_of_cards: number_of_cards)
 
-    draw_final_values = draw_results.map do |combination|
+    draw_results.map do |combination|
       determine_draw_value(cards: combination, flip_symbol:)
     end
-    
-    draw_final_values
   end
 
   # Flips are an array of symbols, either :+ or :-
   def check_flips_consistency(flips:)
-    flip_array = flips.split("")
+    flip_array = flips.split('')
     return [1, nil] if flips.empty?
 
-    raise "Unknown flip value" if flip_array.any? { |flip| !["+", "-"].include?(flip) }
+    raise 'Unknown flip value' if flip_array.any? { |flip| !['+', '-'].include?(flip) }
     raise "You can't mix positive and negative flips" if flip_array.uniq.length > 1
+
     [flip_array.length + 1, flip_array.first]
   end
 
@@ -61,7 +59,7 @@ class DuelCalculationService
   end
 
   def determine_draw_value(cards:, flip_symbol: nil)
-    raise "Inconsistent params" if cards.size > 1 && flip_symbol.nil?
+    raise 'Inconsistent params' if cards.size > 1 && flip_symbol.nil?
 
     # If only one card is drawn, return the value of the card
     return cards.first if cards.one?
@@ -72,12 +70,10 @@ class DuelCalculationService
     # Red joker
     return 14 if cards.include?(14)
 
-    if flip_symbol == "+"
+    if flip_symbol == '+'
       cards.max
-    elsif flip_symbol == "-"
+    elsif flip_symbol == '-'
       cards.min
     end
   end
-
- 
 end
