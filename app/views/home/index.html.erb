@@ -19,27 +19,32 @@
             <%= form.number_field :attacker_stat, 
                 value: @attacker_stat, 
                 class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold mb-3", 
-                placeholder: "0-99",
+                placeholder: "0-20",
                 min: 0,
-                max: 99,
+                max: 20,
                 maxlength: 2,
                 required: true %>
+            
+            <!-- Attacker Modifier Indicators -->
+            <div class="flex space-x-1 mt-2" data-modifier-cards-target="attackerModIndicators">
+              <!-- Indicators will be dynamically added here -->
+            </div>
             
             <!-- Attacker Modifier Cards -->
             <div class="flex flex-col items-center space-y-2">
               <label class="text-xs text-slate-400 font-medium">Modifiers</label>
               <div class="flex space-x-2">
-                <div class="modifier-card positive-card inactive" 
-                     data-modifier-cards-target="attackerModPositive"
-                     data-action="click->modifier-cards#addPositive"
-                     data-input-target="attackerModInput">
-                  <span class="card-symbol">+</span>
-                </div>
                 <div class="modifier-card negative-card inactive" 
                      data-modifier-cards-target="attackerModNegative"
                      data-action="click->modifier-cards#addNegative"
                      data-input-target="attackerModInput">
                   <span class="card-symbol">-</span>
+                </div>
+                <div class="modifier-card positive-card inactive" 
+                     data-modifier-cards-target="attackerModPositive"
+                     data-action="click->modifier-cards#addPositive"
+                     data-input-target="attackerModInput">
+                  <span class="card-symbol">+</span>
                 </div>
               </div>
             </div>
@@ -55,27 +60,32 @@
             <%= form.number_field :defender_stat, 
                 value: @defender_stat, 
                 class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold mb-3", 
-                placeholder: "0-99",
+                placeholder: "0-20",
                 min: 0,
                 max: 20,
                 maxlength: 2,
                 required: true %>
             
+            <!-- Defender Modifier Indicators -->
+            <div class="flex space-x-1 mt-2" data-modifier-cards-target="defenderModIndicators">
+              <!-- Indicators will be dynamically added here -->
+            </div>
+            
             <!-- Defender Modifier Cards -->
             <div class="flex flex-col items-center space-y-2">
               <label class="text-xs text-slate-400 font-medium">Modifiers</label>
               <div class="flex space-x-2">
-                <div class="modifier-card positive-card inactive" 
-                     data-modifier-cards-target="defenderModPositive"
-                     data-action="click->modifier-cards#addPositive"
-                     data-input-target="defenderModInput">
-                  <span class="card-symbol">+</span>
-                </div>
                 <div class="modifier-card negative-card inactive" 
                      data-modifier-cards-target="defenderModNegative"
                      data-action="click->modifier-cards#addNegative"
                      data-input-target="defenderModInput">
                   <span class="card-symbol">-</span>
+                </div>
+                <div class="modifier-card positive-card inactive" 
+                     data-modifier-cards-target="defenderModPositive"
+                     data-action="click->modifier-cards#addPositive"
+                     data-input-target="defenderModInput">
+                  <span class="card-symbol">+</span>
                 </div>
               </div>
             </div>
@@ -91,12 +101,6 @@
             class: "w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-slate-900 shadow-lg" %>
       <% end %>
       
-      <!-- Modifier Instructions -->
-      <div class="mt-6 text-center">
-        <p class="text-sm text-slate-400">
-          💡 <strong>Modifiers:</strong> Click the card to cycle through +, ++, -, --, or no modifier. Positive and negative cancel each other out.
-        </p>
-      </div>
     </div>
 
     <!-- Results Card -->

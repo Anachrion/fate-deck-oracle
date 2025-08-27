@@ -90,6 +90,33 @@
   box-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
 }
 
+/* Indicator Cards - Small visual indicators */
+.modifier-indicator {
+  width: 20px;
+  height: 28px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 10px;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.modifier-indicator.positive {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  border-color: #34d399;
+}
+
+.modifier-indicator.negative {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+  border-color: #f87171;
+}
+
 .card-symbol {
   font-weight: bold;
   font-size: 16px;
