@@ -1,0 +1,29 @@
+<!-- Form values that will be updated by Turbo Stream -->
+<script>
+  // Update the form values after Turbo Stream response
+  document.addEventListener('DOMContentLoaded', function() {
+    // Update attacker stat field
+    const attackerStatField = document.querySelector('input[name="attacker_stat"]');
+    if (attackerStatField) {
+      attackerStatField.value = '<%= attacker_stat %>';
+    }
+    
+    // Update defender stat field
+    const defenderStatField = document.querySelector('input[name="defender_stat"]');
+    if (defenderStatField) {
+      defenderStatField.value = '<%= defender_stat %>';
+    }
+    
+    // Update attacker modifier hidden field
+    const attackerModField = document.querySelector('input[name="attacker_modifier"]');
+    if (attackerModField) {
+      attackerModField.value = '<%= attacker_modifier %>';
+    }
+    
+    // Update defender modifier hidden field
+    const defenderModField = document.querySelector('input[name="defender_modifier"]');
+    if (defenderModField) {
+      defenderModField.value = '<%= defender_modifier %>';
+    }
+  });
+</script>

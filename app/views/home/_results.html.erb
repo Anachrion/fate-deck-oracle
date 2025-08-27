@@ -1,0 +1,98 @@
+<!-- Results Card -->
+<% if duel_data %>
+  <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 results-card">
+    <!-- Success Rate Display -->
+    <div class="success-rate-display text-center mb-8">
+      <h2 class="text-4xl font-bold text-white mb-3">
+        Success Rate: 
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+          <%= duel_data[:global_success_rate] %>%
+        </span>
+      </h2>
+      
+      <h3 class="text-xl text-slate-300">
+        With a raise: 
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
+          <%= duel_data[:global_success_rate_with_raise] %>%
+        </span>
+      </h3>
+    </div>
+    
+    <!-- Duel Summary Box -->
+    <div class="duel-summary-box">
+      <div class="duel-summary-content">
+        <!-- Duel Type Icon and Label -->
+        <div class="duel-type-section">
+          <span class="duel-type-icon">
+            <% case duel_data[:duel_type] %>
+            <% when 'simple' %>
+              🎯
+            <% when 'opposed' %>
+              ⚔️
+            <% when 'opposed_with_tn' %>
+              🎯⚔️
+            <% end %>
+          </span>
+          <span class="duel-type-label">
+            <%= duel_data[:duel_type].gsub('_', ' ') %>
+          </span>
+        </div>
+        
+        <!-- Separator -->
+        <span class="separator">•</span>
+        
+        <!-- Attacker -->
+        <div class="attacker-section">
+          <span class="attacker-stat"><%= duel_data[:attacker_stat] %></span>
+          <% if duel_data[:attacker_flips].present? %>
+            <div class="flex space-x-1">
+              <% duel_data[:attacker_flips].chars.each do |flip| %>
+                <span class="modifier-indicator <%= flip == '+' ? 'positive' : 'negative' %>">
+                  <%= flip %>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        
+        <!-- VS or + separator -->
+        <% if duel_data[:duel_type] == 'simple' %>
+          <span class="separator">+</span>
+        <% else %>
+          <span class="vs-separator">VS</span>
+        <% end %>
+        
+        <!-- Defender or Target -->
+        <% if duel_data[:duel_type] == 'simple' %>
+          <!-- Simple Duel: Target Number -->
+          <div class="target-section">
+            <span class="target-value">TN <%= duel_data[:target_number] %></span>
+          </div>
+        <% else %>
+          <!-- Opposed Duel: Defender -->
+          <div class="defender-section">
+            <span class="defender-stat"><%= duel_data[:defender_stat] %></span>
+            <% if duel_data[:defender_flips].present? %>
+              <div class="flex space-x-1">
+                <% duel_data[:defender_flips].chars.each do |flip| %>
+                  <span class="modifier-indicator <%= flip == '+' ? 'positive' : 'negative' %>">
+                    <%= flip %>
+                  </span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+          
+          <!-- Target Number for Opposed + TN -->
+          <% if duel_data[:duel_type] == 'opposed_with_tn' && duel_data[:target_number] %>
+            <span class="separator">•</span>
+            <div class="target-section">
+              <span class="target-value">TN <%= duel_data[:target_number] %></span>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+    
+  </div>
+<% end %>

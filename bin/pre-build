@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -e
+
+echo "Pre-building assets for Docker deployment..."
+
+# Check if we're in the right directory
+if [ ! -f "Gemfile" ]; then
+    echo "Error: Please run this script from the Rails application root directory"
+    exit 1
+fi
+
+# Build Tailwind CSS
+echo "Building Tailwind CSS..."
+bundle exec rails tailwindcss:build
+
+# Verify the file was created
+if [ -f "app/assets/builds/tailwind.css" ]; then
+    echo "✓ Tailwind CSS built successfully"
+    echo "File size: $(du -h app/assets/builds/tailwind.css | cut -f1)"
+else
+    echo "✗ Error: Tailwind CSS was not built"
+    exit 1
+fi
+
+# Precompile assets if possible
+if [ -n "$RAILS_MASTER_KEY" ]; then
+    echo "Precompiling assets..."
+    bundle exec rails assets:precompile
+    echo "✓ Assets precompiled successfully"
+else
+    echo "Warning: RAILS_MASTER_KEY not set, skipping asset precompilation"
+fi
+
+echo "Pre-build completed successfully!"
+echo "You can now run: docker build -t your-app-name ."

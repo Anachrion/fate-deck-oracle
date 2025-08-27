@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+echo "Building Tailwind CSS..."
+bundle exec rails tailwindcss:build
+
+echo "Precompiling assets..."
+bundle exec rails assets:precompile
+
+echo "Build complete!"

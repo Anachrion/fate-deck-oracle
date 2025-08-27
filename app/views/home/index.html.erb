@@ -2,83 +2,205 @@
   <div class="max-w-2xl mx-auto">
     <!-- Header -->
     <div class="text-center mb-12">
+      <!-- Application Logo -->
+      <div class="flex justify-center mb-6">
+        <%= image_tag "/favicon.svg", 
+            alt: "Fate Deck Oracle Logo", 
+            class: "w-24 h-24 md:w-32 md:h-32 object-contain drop-shadow-2xl" %>
+      </div>
+      
       <h1 class="text-5xl font-bold text-white mb-4 tracking-tight">
         Fate Deck Oracle
       </h1>
       <p class="text-xl text-slate-300 max-w-md mx-auto">
-        Calculate your success rates in epic duels with precision and style
+        Success rates in Malifaux duels with precision and simplicity
       </p>
     </div>
 
     <!-- Form Card -->
-    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mb-8">
-      <%= form_with url: calculate_path, method: :post, local: true, class: "space-y-6" do |form| %>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <%= form.label :attacker_stat, "Attacker Value", class: "block text-sm font-semibold text-white mb-2" %>
-            <%= form.number_field :attacker_stat, 
-                value: @attacker_stat, 
-                class: "w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200", 
-                placeholder: "Enter attacker value",
-                required: true %>
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mb-8" data-controller="modifier-cards duel-type">
+      <%= form_with url: calculate_path, method: :post, local: false, class: "space-y-6", data: { turbo_stream: true } do |form| %>
+                <div class="flex flex-row justify-center items-center">
+          <!-- Attacker Column -->
+          <div class="flex flex-col items-center">
+            <%= form.label :attacker_stat, "Attacker", class: "block text-sm font-semibold text-white mb-2" %>
+            
+            <div class="flex items-center">
+              <%= form.number_field :attacker_stat, 
+                  value: params[:attacker_stat] || @attacker_stat, 
+                  class: "w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl md:text-2xl font-bold flex-shrink-0", 
+                  min: 0,
+                  max: 9,
+                  maxlength: 2,
+                  required: true %>
+              
+              <!-- Attacker Modifier Indicators -->
+              <div class="flex flex-col space-y-2" data-modifier-cards-target="attackerModIndicators">
+                <!-- Indicators will be dynamically added here -->
+              </div>
+            </div>
+            
+            <!-- Attacker Modifier Cards -->
+            <div class="flex flex-col items-center space-y-2 mt-2">
+              <label class="text-xs text-slate-400 font-medium">Modifiers</label>
+              <div class="flex space-x-2">
+                <div class="modifier-card negative-card inactive" 
+                     data-modifier-cards-target="attackerModNegative"
+                     data-action="click->modifier-cards#addNegative"
+                     data-input-target="attackerModInput">
+                  <span class="card-symbol">-</span>
+                </div>
+                <div class="modifier-card positive-card inactive" 
+                     data-modifier-cards-target="attackerModPositive"
+                     data-action="click->modifier-cards#addPositive"
+                     data-input-target="attackerModInput">
+                  <span class="card-symbol">+</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Hidden input for form submission -->
+            <%= form.hidden_field :attacker_modifier, 
+                value: params[:attacker_modifier] || @attacker_modifier || "", 
+                data: { "modifier-cards-target": "attackerModInput" } %>
           </div>
           
-          <div>
-            <%= form.label :defender_stat, "Defender Value", class: "block text-sm font-semibold text-white mb-2" %>
-            <%= form.number_field :defender_stat, 
-                value: @defender_stat, 
-                class: "w-full px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200", 
-                placeholder: "Enter defender value",
-                required: true %>
+          <!-- Spacer between attacker and defender group -->
+          <div class="w-8 sm:w-12 lg:w-16"></div>
+          
+          <!-- Defender and TN Group (closer together) -->
+          <div class="flex flex-row items-center gap-2 sm:gap-3 lg:gap-4">
+            <!-- Defender Column -->
+            <div data-duel-type-target="defenderInput" class="flex flex-col items-center">
+              <%= form.label :defender_stat, "Defender", class: "block text-sm font-semibold text-white mb-2" %>
+              
+              <div class="flex items-center">
+                <%= form.number_field :defender_stat, 
+                    value: params[:defender_stat] || @defender_stat, 
+                    class: "w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl md:text-2xl font-bold flex-shrink-0", 
+                    min: 0,
+                    max: 9,
+                    maxlength: 2,
+                    required: true %>
+                
+                <!-- Defender Modifier Indicators -->
+                <div class="flex flex-col space-y-2" data-modifier-cards-target="defenderModIndicators">
+                  <!-- Indicators will be dynamically added here -->
+                </div>
+              </div>
+              
+              <!-- Defender Modifier Cards -->
+              <div class="flex flex-col items-center space-y-2 mt-2">
+                <label class="text-xs text-slate-400 font-medium">Modifiers</label>
+                <div class="flex space-x-2">
+                  <div class="modifier-card negative-card inactive" 
+                       data-modifier-cards-target="defenderModNegative"
+                       data-action="click->modifier-cards#addNegative"
+                       data-input-target="defenderModInput">
+                    <span class="card-symbol">-</span>
+                  </div>
+                  <div class="modifier-card positive-card inactive" 
+                       data-modifier-cards-target="defenderModPositive"
+                       data-action="click->modifier-cards#addPositive"
+                       data-input-target="defenderModInput">
+                    <span class="card-symbol">+</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Hidden input for form submission -->
+              <%= form.hidden_field :defender_modifier, 
+                  value: params[:defender_modifier] || @defender_modifier || "", 
+                  data: { "modifier-cards-target": "defenderModInput" } %>
+            </div>
+            
+            <!-- Target Number Column (for simple duels) -->
+            <div data-duel-type-target="targetNumberInput" class="hidden flex flex-col items-center">
+              <%= form.label :target_number,   "TN", class: "block text-sm font-semibold text-white mb-2" %>
+              <div class="flex items-center">
+                 <%= form.number_field :target_number, 
+                     value: params[:target_number] || 0, 
+                     class: "w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl md:text-2xl font-bold", 
+                     min: 0,
+                     max: 20,
+                     maxlength: 2 %>
+              </div>
+              
+              <!-- Just a placeholder for height consistency -->
+              <div class="flex flex-col items-center space-y-2 mt-2 opacity-0 pointer-events-none">
+                <label class="text-xs text-slate-400 font-medium">Modifiers</label>
+                <div class="flex space-x-2">
+                  <div class="modifier-card negative-card inactive" 
+                    <span class="card-symbol">-</span>
+                  </div>
+                  <div class="modifier-card positive-card inactive" 
+                    <span class="card-symbol">+</span>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
           </div>
         </div>
         
+        <!-- Duel Type Toggle -->
+        <div class="flex justify-center">
+          <div class="duel-type-toggle" data-duel-type-target="toggleContainer">
+            <button type="button" 
+                    class="duel-type-btn"
+                    data-duel-type="simple"
+                    data-action="click->duel-type#selectType">
+              Simple Duel
+            </button>
+            <button type="button" 
+                    class="duel-type-btn"
+                    data-duel-type="opposed"
+                    data-action="click->duel-type#selectType">
+              Opposed Duel
+            </button>
+            <button type="button" 
+                    class="duel-type-btn"
+                    data-duel-type="opposed_with_tn"
+                    data-action="click->duel-type#selectType">
+              Opposed + TN
+            </button>
+          </div>
+        </div>
+        
+        <!-- Hidden input for duel type -->
+        <%= form.hidden_field :duel_type, 
+            value: params[:duel_type] || "opposed", 
+            data: { "duel-type-target": "input" } %>
+       
         <%= form.submit "Calculate Success Rate", 
             class: "w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-slate-900 shadow-lg" %>
       <% end %>
+      
     </div>
 
     <!-- Results Card -->
-    <% if @duel_data %>
-      <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20">
-        <div class="text-center mb-8">
-          <h2 class="text-3xl font-bold text-white mb-2">
-            Success Rate: 
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-              <%= @duel_data["global_success_rate"] %>%
-            </span>
-          </h2>
-          
-          <h3 class="text-xl text-slate-300 mb-6">
-            With a raise: 
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">
-              <%= @duel_data["global_success_rate_with_raise"] %>%
-            </span>
-          </h3>
-        </div>
-        
-        <div class="bg-white/5 rounded-xl p-6 border border-white/10">
-          <h4 class="text-lg font-semibold text-white mb-4 text-center">Duel Details</h4>
-          <div class="space-y-4">
-            <div class="flex justify-between items-center py-3 px-4 bg-white/5 rounded-lg">
-              <span class="text-slate-300 font-medium">Attacker Value:</span>
-              <span class="text-white font-bold text-lg"><%= @duel_data["attacker_stat"] %></span>
-            </div>
-            
-            <div class="flex justify-between items-center py-3 px-4 bg-white/5 rounded-lg">
-              <span class="text-slate-300 font-medium">Defender Value:</span>
-              <span class="text-white font-bold text-lg"><%= @duel_data["defender_stat"] %></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% end %>
+    <div id="results_turbo_frame">
+      <%= render 'results', duel_data: @duel_data %>
+    </div>
+    
+    <!-- Form Values Update Target -->
+    <div id="form_values"></div>
 
     <!-- Footer -->
     <div class="text-center mt-12">
-      <p class="text-slate-400 text-sm">
+      <p class="text-slate-400 text-sm mb-4">
         Powered by the mystical forces of probability and Tailwind CSS
       </p>
+      <div class="border-t border-slate-700 pt-4">
+        <p class="text-slate-500 text-xs">
+          <a href="https://github.com/Anachrion/fate-deck-oracle" 
+             target="_blank" 
+             rel="noopener noreferrer"
+             class="text-purple-400 hover:text-purple-300 transition-colors duration-200 font-medium">
+            Github repository
+          </a> 
+        </p>
+      </div>
     </div>
   </div>
 </div>
