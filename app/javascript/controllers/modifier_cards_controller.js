@@ -19,12 +19,16 @@ export default class extends Controller {
     
     const values = ["--", "-", "", "+", "++"]
     let index = values.indexOf(currentValue)
-    let newIndex = Math.min(values.length - 1, index + 1) // Never go below over the max 
+    let newIndex = Math.min(values.length - 1, index + 1) // Never go above array bounds
     let newValue = values[newIndex]
-    
     
     input.value = newValue
     this.updateCardDisplay()
+    
+    // Flash the positive card with green color briefly AFTER updating display
+    setTimeout(() => {
+      this.flashCard(target, "positive")
+    }, 50) // Small delay to ensure updateCardDisplay completes first
   }
 
   addNegative(event) {
@@ -40,6 +44,11 @@ export default class extends Controller {
     
     input.value = newValue
     this.updateCardDisplay()
+    
+    // Flash the negative card with red color briefly AFTER updating display
+    setTimeout(() => {
+      this.flashCard(target, "negative")
+    }, 50) // Small delay to ensure updateCardDisplay completes first
   }
 
   updateCardDisplay() {
@@ -112,5 +121,22 @@ export default class extends Controller {
     indicator.className = `modifier-indicator ${type}`
     indicator.textContent = symbol
     container.appendChild(indicator)
+  }
+
+  flashCard(card, type) {
+    console.log(`Flashing card with type: ${type}`)
+    console.log('Card element:', card)
+    console.log('Card classes before:', card.className)
+    
+    // Add flash class for immediate color change
+    card.classList.add(`flash-${type}`)
+    console.log('Card classes after adding flash:', card.className)
+    
+    // Remove flash class after 300ms to fade back to original color
+    setTimeout(() => {
+      console.log(`Removing flash-${type} class`)
+      card.classList.remove(`flash-${type}`)
+      console.log('Card classes after removing flash:', card.className)
+    }, 300)
   }
 }

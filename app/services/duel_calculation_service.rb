@@ -2,7 +2,7 @@ class DuelCalculationService
 
   FATE_DECK = (1..13).to_a * 4 + [0, 14]
 
-  def initialize(attacker_stat:, defender_stat:, attacker_flips: [], defender_flips: [])
+  def initialize(attacker_stat:, defender_stat:, attacker_flips: "", defender_flips: "")
     @attacker_stat = attacker_stat
     @defender_stat = defender_stat
     @attacker_flips = attacker_flips
@@ -40,7 +40,7 @@ class DuelCalculationService
     draw_results = combinations(number_of_cards: number_of_cards)
 
     draw_final_values = draw_results.map do |combination|
-      determine_draw_value(cards: combination, flip: flip_symbol)
+      determine_draw_value(cards: combination, flip_symbol:)
     end
     
     draw_final_values
@@ -48,19 +48,20 @@ class DuelCalculationService
 
   # Flips are an array of symbols, either :+ or :-
   def check_flips_consistency(flips:)
+    flip_array = flips.split("")
     return [1, nil] if flips.empty?
 
-    raise "Unknown flip value" if (@attacker_flips+@defender_flips).any? { |flip| ![:+, :-].include?(flip) }
-    raise "You can't mix positive and negative flips" if (@attacker_flips.uniq.length > 1) || (@defender_flips.uniq.length > 1)
-    [flips.length + 1, flips.first]
+    raise "Unknown flip value" if flip_array.any? { |flip| !["+", "-"].include?(flip) }
+    raise "You can't mix positive and negative flips" if flip_array.uniq.length > 1
+    [flip_array.length + 1, flip_array.first]
   end
 
   def combinations(number_of_cards:)
     FATE_DECK.combination(number_of_cards).to_a
   end
 
-  def determine_draw_value(cards:, flip: nil)
-    raise "Inconsistent params" if cards.size > 1 && flip.nil?
+  def determine_draw_value(cards:, flip_symbol: nil)
+    raise "Inconsistent params" if cards.size > 1 && flip_symbol.nil?
 
     # If only one card is drawn, return the value of the card
     return cards.first if cards.one?
@@ -71,9 +72,9 @@ class DuelCalculationService
     # Red joker
     return 14 if cards.include?(14)
 
-    if flip == :+
+    if flip_symbol == "+"
       cards.max
-    elsif flip == :-
+    elsif flip_symbol == "-"
       cards.min
     end
   end
