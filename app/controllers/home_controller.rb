@@ -35,6 +35,8 @@ class HomeController < ApplicationController
     redirect_to root_path(
       attacker_stat: ,
       defender_stat:,
+      attacker_modifier: attacker_flips,
+      defender_modifier: defender_flips,
       duel_data:
     )
   end

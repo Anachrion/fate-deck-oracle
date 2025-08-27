@@ -8,7 +8,8 @@ export default class extends Controller {
   }
 
   connect() {
-    this.updateCardDisplay()
+    // Initialize indicators based on existing values on page load
+    this.updateIndicators()
   }
 
   addPositive(event) {
