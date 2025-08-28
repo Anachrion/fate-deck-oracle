@@ -13,7 +13,6 @@ ENV RAILS_ENV="production" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
-
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
@@ -33,13 +32,31 @@ COPY . .
 # Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
+# Build Tailwind CSS first
+RUN ./bin/rails tailwindcss:build
+
 # Precompiling assets for production
-# # Note: This requires RAILS_MASTER_KEY to be set during build or runtime
+# Note: This requires RAILS_MASTER_KEY to be set during build or runtime
 RUN if [ -n "$RAILS_MASTER_KEY" ]; then \
       ./bin/rails assets:precompile; \
     else \
       echo "Warning: RAILS_MASTER_KEY not set, assets will be precompiled at runtime"; \
     fi
+
+# Ensure the builds directory exists and contains the compiled assets
+RUN mkdir -p public/assets && \
+    if [ -d "app/assets/builds" ]; then \
+      cp -r app/assets/builds/* public/assets/ 2>/dev/null || true; \
+    fi
+
+# Alternative asset compilation if RAILS_MASTER_KEY is not available
+RUN if [ ! -f "public/assets/tailwind.css" ] && [ -f "app/assets/builds/tailwind.css" ]; then \
+      mkdir -p public/assets && \
+      cp app/assets/builds/tailwind.css public/assets/; \
+    fi
+
+# Use Rake task to ensure Tailwind CSS is available
+RUN ./bin/rails assets:ensure_tailwind
 
 # Final stage for app image
 FROM base
