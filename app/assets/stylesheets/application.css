@@ -367,17 +367,90 @@
 
 /* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
-  .duel-summary-content {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
+  .duel-summary-box {
+    padding: 16px;
+    margin: 16px 0;
   }
   
-  .duel-summary-content > * {
-    margin: 0;
+  .duel-summary-content {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+    font-size: 14px;
+    justify-content: center;
+    align-items: center;
+    overflow-x: auto;
+    padding: 0 4px;
+  }
+  
+  .duel-type-section {
+    flex-shrink: 0;
+    gap: 4px;
+  }
+  
+  .duel-type-section .duel-type-icon {
+    font-size: 18px;
+  }
+  
+  .duel-type-section .duel-type-label {
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  
+  .attacker-section .attacker-stat,
+  .defender-section .defender-stat,
+  .target-section .target-value {
+    font-size: 16px;
   }
   
   .separator, .vs-separator {
-    display: none;
+    font-size: 16px;
+    padding: 0 4px;
+  }
+  
+  .modifier-indicator {
+    width: 16px;
+    height: 22px;
+    font-size: 10px;
+    margin-left: 2px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .duel-summary-box {
+    padding: 12px;
+    margin: 12px 0;
+  }
+  
+  .duel-summary-content {
+    gap: 6px;
+    font-size: 12px;
+  }
+  
+  .duel-type-section .duel-type-icon {
+    font-size: 16px;
+  }
+  
+  .duel-type-section .duel-type-label {
+    font-size: 11px;
+  }
+  
+  .attacker-section .attacker-stat,
+  .defender-section .defender-stat,
+  .target-section .target-value {
+    font-size: 14px;
+  }
+  
+  .separator, .vs-separator {
+    font-size: 14px;
+    padding: 0 2px;
+  }
+  
+  .modifier-indicator {
+    width: 14px;
+    height: 20px;
+    font-size: 9px;
+    margin-left: 1px;
   }
 }
