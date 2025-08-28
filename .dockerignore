@@ -111,7 +111,7 @@ node_modules/
 !/storage/.keep
 
 # Ignore master key but allow credentials
-/config/master.key
+# /config/master.key
 
 # Ignore environment files
 .env*
