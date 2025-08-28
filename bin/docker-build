@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -e
+
+echo "Starting Docker build process..."
+
+# Check if we're in a Docker build environment
+if [ -f "/.dockerenv" ]; then
+    echo "Running inside Docker container"
+    
+    # Set up environment
+    export RAILS_ENV=production
+    
+    # Try to build Tailwind CSS
+    echo "Building Tailwind CSS..."
+    if bundle exec rails tailwindcss:build; then
+        echo "Tailwind CSS built successfully"
+    else
+        echo "Warning: Tailwind CSS build failed, checking for existing file..."
+        if [ -f "app/assets/builds/tailwind.css" ]; then
+            echo "Using existing Tailwind CSS file"
+        else
+            echo "Error: No Tailwind CSS file available"
+            exit 1
+        fi
+    fi
+    
+    # Try to precompile assets
+    echo "Precompiling assets..."
+    if [ -n "$RAILS_MASTER_KEY" ]; then
+        bundle exec rails assets:precompile
+        echo "Assets precompiled successfully"
+    else
+        echo "Warning: RAILS_MASTER_KEY not set, skipping asset precompilation"
+    fi
+    
+    # Ensure Tailwind CSS is available in public/assets
+    echo "Ensuring Tailwind CSS is available..."
+    mkdir -p public/assets
+    if [ -f "app/assets/builds/tailwind.css" ]; then
+        cp app/assets/builds/tailwind.css public/assets/
+        echo "Tailwind CSS copied to public/assets/"
+    fi
+    
+    echo "Build process completed successfully"
+else
+    echo "This script should be run inside a Docker container"
+    exit 1
+fi

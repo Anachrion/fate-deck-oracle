@@ -15,12 +15,22 @@ Set these environment variables in your Render service:
 
 ## Build Process
 
-The Dockerfile will automatically:
+### Option 1: Pre-build Assets Locally (Recommended)
 
-1. Build Tailwind CSS using `./bin/rails tailwindcss:build`
-2. Precompile assets using `./bin/rails assets:precompile`
-3. Copy compiled assets to the public directory
-4. Ensure Tailwind CSS is available in production
+1. **Build Tailwind CSS locally before Docker build**:
+   ```bash
+   ./bin/pre-build
+   ```
+
+2. **Deploy to Render**:
+   - The Dockerfile will copy the pre-built assets without trying to build them
+   - This avoids the "tailwindcss:build" error during Docker build
+
+### Option 2: Build During Docker Build (Alternative)
+
+The Dockerfile will automatically:
+1. Copy existing assets from `app/assets/builds/` to `public/assets/`
+2. Ensure Tailwind CSS is available in production
 
 ## Troubleshooting
 
@@ -28,9 +38,30 @@ The Dockerfile will automatically:
 
 If you encounter "The asset 'tailwind.css' is not present in the asset pipeline":
 
-1. Check that `RAILS_MASTER_KEY` is set in Render
-2. Verify that the build process completed successfully
-3. Check the build logs for any asset compilation errors
+1. **Check that `RAILS_MASTER_KEY` is set in Render**
+2. **Verify that the build process completed successfully**
+3. **Check the build logs for any asset compilation errors**
+
+### Docker Build Failures
+
+If you get "failed to solve: process '/bin/sh -c ./bin/rails tailwindcss:build' did not complete successfully":
+
+1. **Use the pre-build approach**:
+   ```bash
+   ./bin/pre-build
+   docker build -t your-app-name .
+   ```
+
+2. **Check your local Ruby version**:
+   ```bash
+   ruby --version
+   # Should match .ruby-version (3.3.0)
+   ```
+
+3. **Ensure Tailwind CSS is built locally**:
+   ```bash
+   bundle exec rails tailwindcss:build
+   ```
 
 ### Manual Asset Building
 
@@ -52,8 +83,8 @@ bundle exec rails assets:ensure_tailwind
 To test the build process locally:
 
 ```bash
-# Use the build script
-./bin/build
+# Use the pre-build script (recommended)
+./bin/pre-build
 
 # Or run individual commands
 bundle exec rails tailwindcss:build
@@ -64,8 +95,8 @@ bundle exec rails assets:precompile
 
 The application expects these files to be present:
 
-- `app/assets/builds/tailwind.css` - Compiled Tailwind CSS
-- `public/assets/tailwind.css` - Production-ready Tailwind CSS
+- `app/assets/builds/tailwind.css` - Compiled Tailwind CSS (built locally)
+- `public/assets/tailwind.css` - Production-ready Tailwind CSS (copied during Docker build)
 - `config/initializers/assets.rb` - Asset pipeline configuration
 - `app/assets/config/manifest.js` - Asset manifest
 
@@ -75,3 +106,24 @@ The application expects these files to be present:
 2. **Missing Dependencies**: Run `bundle install` before building
 3. **Asset Precompilation Failures**: Check that all required environment variables are set
 4. **Permission Issues**: Ensure the build process has write access to the assets directory
+5. **Docker Build Failures**: Use the pre-build approach to avoid Rails command issues during Docker build
+
+## Quick Fix for Render Deployment
+
+If you're still having issues, try this simplified approach:
+
+1. **Build assets locally**:
+   ```bash
+   ./bin/pre-build
+   ```
+
+2. **Commit the built assets**:
+   ```bash
+   git add app/assets/builds/
+   git commit -m "Add pre-built Tailwind CSS assets"
+   git push
+   ```
+
+3. **Deploy to Render**:
+   - The Dockerfile will copy the existing assets without building them
+   - This should resolve the "tailwindcss:build" error
