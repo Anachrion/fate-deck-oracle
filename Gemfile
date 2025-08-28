@@ -17,7 +17,7 @@ gem 'sqlite3', '>= 1.4'
 gem 'puma', '>= 5.0'
 
 # Use Tailwind CSS for styling
-gem 'tailwindcss-rails'
+gem 'tailwindcss-rails', "~> 4.0"
 
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]
 gem 'importmap-rails'
