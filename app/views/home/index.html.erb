@@ -11,18 +11,17 @@
     </div>
 
     <!-- Form Card -->
-    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mb-8" data-controller="modifier-cards">
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mb-8" data-controller="modifier-cards duel-type">
       <%= form_with url: calculate_path, method: :post, local: false, class: "space-y-6", data: { turbo_stream: true } do |form| %>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="flex flex-col items-center">
             <%= form.label :attacker_stat, "Attacker Value", class: "block text-sm font-semibold text-white mb-2" %>
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center">
                           <%= form.number_field :attacker_stat, 
                 value: params[:attacker_stat] || @attacker_stat, 
                 class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold flex-shrink-0", 
-                placeholder: "0-20",
                 min: 0,
-                max: 20,
+                max: 9,
                 maxlength: 2,
                 required: true %>
               
@@ -59,13 +58,12 @@
           
           <div class="flex flex-col items-center">
             <%= form.label :defender_stat, "Defender Value", class: "block text-sm font-semibold text-white mb-2" %>
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center">
               <%= form.number_field :defender_stat, 
                   value: params[:defender_stat] || @defender_stat, 
                   class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold flex-shrink-0", 
-                  placeholder: "0-20",
                   min: 0,
-                  max: 20,
+                  max: 9,
                   maxlength: 2,
                   required: true %>
               
@@ -98,6 +96,45 @@
             <%= form.hidden_field :defender_modifier, 
                 value: params[:defender_modifier] || @defender_modifier || "", 
                 data: { "modifier-cards-target": "defenderModInput" } %>
+          </div>
+        </div>
+        
+        <!-- Duel Type Toggle -->
+        <div class="flex justify-center">
+          <div class="bg-white/10 backdrop-blur-lg rounded-xl p-1 border border-white/20">
+            <div class="flex space-x-1">
+              <button type="button" 
+                      class="duel-type-btn px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                      data-duel-type="opposed"
+                      data-action="click->duel-type#selectType">
+                Opposed Duel
+              </button>
+              <button type="button" 
+                      class="duel-type-btn px-6 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                      data-duel-type="simple"
+                      data-action="click->duel-type#selectType">
+                Simple Duel
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Hidden input for duel type -->
+        <%= form.hidden_field :duel_type, 
+            value: params[:duel_type] || "opposed", 
+            data: { "duel-type-target": "input" } %>
+        
+        <!-- Target Number Input (for simple duels) -->
+        <div class="flex justify-center" data-duel-type-target="targetNumberSection" style="display: none;">
+          <div class="flex flex-col items-center">
+            <%= form.label :target_number, "Target Number", class: "block text-sm font-semibold text-white mb-2" %>
+            <%= form.number_field :target_number, 
+                value: params[:target_number] || 0, 
+                class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold", 
+                placeholder: "0-20",
+                min: 0,
+                max: 20,
+                maxlength: 2 %>
           </div>
         </div>
         

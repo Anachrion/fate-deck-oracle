@@ -3,43 +3,72 @@
 class DuelCalculationService
   FATE_DECK = (1..13).to_a * 4 + [0, 14]
 
-  def initialize(attacker_stat:, defender_stat:, attacker_flips: '', defender_flips: '')
+  def initialize(attacker_stat:, defender_stat: nil, target_number: nil, attacker_flips: '', defender_flips: '', duel_type: 'opposed')
     @attacker_stat = attacker_stat
     @defender_stat = defender_stat
     @attacker_flips = attacker_flips
     @defender_flips = defender_flips
+    @target_number = target_number
+    @duel_type = duel_type
   end
 
-  attr_reader :attacker_stat, :defender_stat, :attacker_flips, :defender_flips
+  attr_reader :attacker_stat, :defender_stat, :attacker_flips, :defender_flips, :target_number, :duel_type
 
   def call
-    attacker_combinations = process_combinations(flips: attacker_flips)
-    defender_combinations = process_combinations(flips: defender_flips)
+    results = case duel_type
+              when 'simple'
+                simple_duel_results
+              else
+                opposed_duel_results
+              end
 
-    result = []
-
-    attacker_combinations.each do |attacker_draw_value|
-      defender_combinations.each do |defender_draw_value|
-        result << (attacker_draw_value + attacker_stat) - (defender_draw_value + defender_stat)
-      end
-    end
-
-    global_success_rate = ((result.count { |value| value >= 0 } / result.size.to_f) * 100).round
-    global_success_rate_with_raise = ((result.count { |value| value >= 5 } / result.size.to_f) * 100).round
+    global_success_rate = ((results.count { |value| value >= 0 } / results.size.to_f) * 100).round
+    global_success_rate_with_raise = ((results.count { |value| value >= 5 } / results.size.to_f) * 100).round
 
     {
-      global_success_rate:,
-      global_success_rate_with_raise:
+      global_success_rate: global_success_rate,
+      global_success_rate_with_raise: global_success_rate_with_raise
     }
   end
 
+  def opposed_duel_results
+    attacker_combinations = process_combinations(flips: attacker_flips)
+    defender_combinations = process_combinations(flips: defender_flips)
+
+    results = []
+
+    attacker_combinations.each do |attacker_draw_value|
+      defender_combinations.each do |defender_draw_value|
+        results << (attacker_draw_value + attacker_stat) - (defender_draw_value + defender_stat)
+      end
+    end
+    results
+  end
+
+  def simple_duel_results
+    # For simple duels, we need a target number
+    # If no target number is provided, default to 0 (basic success)
+    target = @target_number || 0
+    
+    attacker_combinations = process_combinations(flips: attacker_flips)
+    
+    results = []
+    
+    attacker_combinations.each do |attacker_draw_value|
+      # In a simple duel, success is when attacker's total meets or exceeds the target
+      results << (attacker_draw_value + attacker_stat) - target
+    end
+    
+    results
+  end
+
   def process_combinations(flips:)
-    number_of_cards, flip_symbol = check_flips_consistency(flips:)
+    number_of_cards, flip_symbol = check_flips_consistency(flips: flips)
 
     draw_results = combinations(number_of_cards: number_of_cards)
 
     draw_results.map do |combination|
-      determine_draw_value(cards: combination, flip_symbol:)
+      determine_draw_value(cards: combination, flip_symbol: flip_symbol)
     end
   end
 
