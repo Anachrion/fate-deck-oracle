@@ -69,4 +69,5 @@ group :test do
   gem 'capybara'
   gem 'rspec'
   gem 'selenium-webdriver'
+  # gem 'rails-controller-testing'  # Not needed for Rails 7
 end

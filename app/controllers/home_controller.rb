@@ -1,24 +1,25 @@
 # frozen_string_literal: true
 
 class HomeController < ApplicationController
+  
   def index
     # Get values from params if they exist (from redirect)
-    @attacker_stat = params[:attacker_stat]
-    @defender_stat = params[:defender_stat]
-    @target_number = params[:target_number]
-    @attacker_modifier = params[:attacker_modifier]
-    @defender_modifier = params[:defender_modifier]
-    @duel_type = params[:duel_type] || "opposed"
+    @attacker_stat = simulation_params[:attacker_stat]
+    @defender_stat = simulation_params[:defender_stat]
+    @target_number = simulation_params[:target_number]
+    @attacker_modifier = simulation_params[:attacker_modifier]
+    @defender_modifier = simulation_params[:defender_modifier]
+    @duel_type = simulation_params[:duel_type] || "opposed"
   end
 
   def calculate
     # Always read the current form values
-    attacker_stat = params[:attacker_stat].presence&.to_i
-    defender_stat = params[:defender_stat].presence&.to_i
-    target_number = params[:target_number].presence&.to_i
-    attacker_flips = params[:attacker_modifier]
-    defender_flips = params[:defender_modifier]
-    duel_type = params[:duel_type] || "opposed"
+    attacker_stat = simulation_params[:attacker_stat].presence&.to_i
+    defender_stat = simulation_params[:defender_stat].presence&.to_i
+    target_number = simulation_params[:target_number].presence&.to_i
+    attacker_flips = simulation_params[:attacker_modifier]
+    defender_flips = simulation_params[:defender_modifier]
+    duel_type = simulation_params[:duel_type]
     
     result = ::DuelCalculationService
              .new(
@@ -49,5 +50,18 @@ class HomeController < ApplicationController
         ]
       end
     end
+  end
+
+  private
+
+  def simulation_params
+    params.permit(
+      :attacker_stat,
+      :defender_stat,
+      :target_number,
+      :attacker_modifier,
+      :defender_modifier,
+      :duel_type  
+    )
   end
 end

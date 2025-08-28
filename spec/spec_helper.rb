@@ -20,6 +20,8 @@
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 
+# Rails testing support is built-in for Rails 7
+
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
@@ -100,4 +102,6 @@ RSpec.configure do |config|
   #   # test failures related to randomization by passing the same `--seed` value
   #   # as the one that triggered the failure.
   #   Kernel.srand config.seed
+  #
+  # Rails 7 includes controller testing support by default
 end
