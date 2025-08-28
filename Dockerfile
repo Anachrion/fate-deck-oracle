@@ -41,7 +41,7 @@ RUN bundle exec bootsnap precompile app/ lib/
 #       echo "Warning: RAILS_MASTER_KEY not set, assets will be precompiled at runtime"; \
 #     fi
 
-RUN bundle exec rails assets:precompile
+RUN ./bin/rails assets:precompile
 
 # Final stage for app image
 FROM base
