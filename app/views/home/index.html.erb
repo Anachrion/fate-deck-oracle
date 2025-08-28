@@ -16,14 +16,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div class="flex flex-col items-center">
             <%= form.label :attacker_stat, "Attacker Value", class: "block text-sm font-semibold text-white mb-2" %>
+            
             <div class="flex items-center">
-                          <%= form.number_field :attacker_stat, 
-                value: params[:attacker_stat] || @attacker_stat, 
-                class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold flex-shrink-0", 
-                min: 0,
-                max: 9,
-                maxlength: 2,
-                required: true %>
+              <%= form.number_field :attacker_stat, 
+                  value: params[:attacker_stat] || @attacker_stat, 
+                  class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold flex-shrink-0", 
+                  min: 0,
+                  max: 9,
+                  maxlength: 2,
+                  required: true %>
               
               <!-- Attacker Modifier Indicators -->
               <div class="flex flex-col space-y-2" data-modifier-cards-target="attackerModIndicators">
@@ -32,7 +33,7 @@
             </div>
             
             <!-- Attacker Modifier Cards -->
-            <div class="flex flex-col items-center space-y-2">
+            <div class="flex flex-col items-center space-y-2 mt-2">
               <label class="text-xs text-slate-400 font-medium">Modifiers</label>
               <div class="flex space-x-2">
                 <div class="modifier-card negative-card inactive" 
@@ -57,38 +58,56 @@
           </div>
           
           <div class="flex flex-col items-center">
-            <%= form.label :defender_stat, "Defender Value", class: "block text-sm font-semibold text-white mb-2" %>
-            <div class="flex items-center">
-              <%= form.number_field :defender_stat, 
-                  value: params[:defender_stat] || @defender_stat, 
-                  class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold flex-shrink-0", 
-                  min: 0,
-                  max: 9,
-                  maxlength: 2,
-                  required: true %>
-              
-              <!-- Defender Modifier Indicators -->
-              <div class="flex flex-col space-y-2" data-modifier-cards-target="defenderModIndicators">
-                <!-- Indicators will be dynamically added here -->
+            <div class="flex items-start space-x-8">
+              <!-- Defender Value Column -->
+              <div class="flex flex-col items-center">
+                <%= form.label :defender_stat, "Defender Value", class: "block text-sm font-semibold text-white mb-2" %>
+                
+                <div class="flex items-center">
+                  <%= form.number_field :defender_stat, 
+                      value: params[:defender_stat] || @defender_stat, 
+                      class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold flex-shrink-0", 
+                      min: 0,
+                      max: 9,
+                      maxlength: 2,
+                      required: true %>
+                  
+                  <!-- Defender Modifier Indicators -->
+                  <div class="flex flex-col space-y-2" data-modifier-cards-target="defenderModIndicators">
+                    <!-- Indicators will be dynamically added here -->
+                  </div>
+                </div>
+                
+                <!-- Defender Modifier Cards -->
+                <div class="flex flex-col items-center space-y-2 mt-2">
+                  <label class="text-xs text-slate-400 font-medium">Modifiers</label>
+                  <div class="flex space-x-2">
+                    <div class="modifier-card negative-card inactive" 
+                         data-modifier-cards-target="defenderModNegative"
+                         data-action="click->modifier-cards#addNegative"
+                         data-input-target="defenderModInput">
+                      <span class="card-symbol">-</span>
+                    </div>
+                    <div class="modifier-card positive-card inactive" 
+                         data-modifier-cards-target="defenderModPositive"
+                         data-action="click->modifier-cards#addPositive"
+                         data-input-target="defenderModInput">
+                      <span class="card-symbol">+</span>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-            
-            <!-- Defender Modifier Cards -->
-            <div class="flex flex-col items-center space-y-2">
-              <label class="text-xs text-slate-400 font-medium">Modifiers</label>
-              <div class="flex space-x-2">
-                <div class="modifier-card negative-card inactive" 
-                     data-modifier-cards-target="defenderModNegative"
-                     data-action="click->modifier-cards#addNegative"
-                     data-input-target="defenderModInput">
-                  <span class="card-symbol">-</span>
-                </div>
-                <div class="modifier-card positive-card inactive" 
-                     data-modifier-cards-target="defenderModPositive"
-                     data-action="click->modifier-cards#addPositive"
-                     data-input-target="defenderModInput">
-                  <span class="card-symbol">+</span>
-                </div>
+              
+              <!-- Target Number Column (for simple duels) -->
+              <div data-duel-type-target="targetNumberInput" class="hidden flex flex-col items-center">
+                <%= form.label :target_number, "Target Number", class: "block text-sm font-semibold text-white mb-2" %>
+                <%= form.number_field :target_number, 
+                    value: params[:target_number] || 0, 
+                    class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold", 
+                    placeholder: "0-9",
+                    min: 0,
+                    max: 9,
+                    maxlength: 2 %>
               </div>
             </div>
             
@@ -123,21 +142,7 @@
         <%= form.hidden_field :duel_type, 
             value: params[:duel_type] || "opposed", 
             data: { "duel-type-target": "input" } %>
-        
-        <!-- Target Number Input (for simple duels) -->
-        <div class="flex justify-center" data-duel-type-target="targetNumberSection" style="display: none;">
-          <div class="flex flex-col items-center">
-            <%= form.label :target_number, "Target Number", class: "block text-sm font-semibold text-white mb-2" %>
-            <%= form.number_field :target_number, 
-                value: params[:target_number] || 0, 
-                class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold", 
-                placeholder: "0-20",
-                min: 0,
-                max: 20,
-                maxlength: 2 %>
-          </div>
-        </div>
-        
+       
         <%= form.submit "Calculate Success Rate", 
             class: "w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 focus:ring-offset-slate-900 shadow-lg" %>
       <% end %>

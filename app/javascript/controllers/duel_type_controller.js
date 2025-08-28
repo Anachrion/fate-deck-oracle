@@ -1,25 +1,34 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "targetNumberSection"]
+  static targets = ["input", "targetNumberInput"]
 
   connect() {
+    console.log("DuelType controller connected")
+    console.log("Targets found:", {
+      input: this.hasInputTarget,
+      inputField: this.hasTargetNumberInputTarget
+    })
     // Set initial state - default to opposed duel
     this.selectType({ currentTarget: this.element.querySelector('[data-duel-type="opposed"]') })
   }
 
   selectType(event) {
+    console.log("selectType called with:", event.currentTarget.dataset.duelType)
     const selectedType = event.currentTarget.dataset.duelType
     const allButtons = this.element.querySelectorAll('.duel-type-btn')
     
     // Update hidden input value
     this.inputTarget.value = selectedType
+    console.log("Updated input value to:", selectedType)
     
     // Show/hide target number section
     if (selectedType === 'simple') {
-      this.targetNumberSectionTarget.style.display = 'flex'
+      console.log("Showing target number elements")
+      this.targetNumberInputTarget.classList.remove('hidden')
     } else {
-      this.targetNumberSectionTarget.style.display = 'none'
+      console.log("Hiding target number elements")
+      this.targetNumberInputTarget.classList.add('hidden')
     }
     
     // Update button styles
