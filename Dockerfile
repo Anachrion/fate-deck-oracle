@@ -35,13 +35,11 @@ RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompiling assets for production
 # # Note: This requires RAILS_MASTER_KEY to be set during build or runtime
-# RUN if [ -n "$RAILS_MASTER_KEY" ]; then \
-#       ./bin/rails assets:precompile; \
-#     else \
-#       echo "Warning: RAILS_MASTER_KEY not set, assets will be precompiled at runtime"; \
-#     fi
-
-RUN bundle exec rails assets:precompile
+RUN if [ -n "$RAILS_MASTER_KEY" ]; then \
+      ./bin/rails assets:precompile; \
+    else \
+      echo "Warning: RAILS_MASTER_KEY not set, assets will be precompiled at runtime"; \
+    fi
 
 # Final stage for app image
 FROM base
