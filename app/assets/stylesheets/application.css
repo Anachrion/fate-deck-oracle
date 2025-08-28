@@ -82,15 +82,15 @@
 }
 
 .modifier-indicator.positive {
-  background: linear-gradient(135deg, #10b981, #059669);
-  color: white;
-  border-color: #10b981;
+  background: linear-gradient(135deg, #86efac, #6ee7b7);
+  color: #064e3b;
+  border-color: #86efac;
 }
 
 .modifier-indicator.negative {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: white;
-  border-color: #ef4444;
+  background: linear-gradient(135deg, #fca5a5, #fecaca);
+  color: #7f1d1d;
+  border-color: #fca5a5;
 }
 
 .card-symbol {
