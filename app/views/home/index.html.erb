@@ -120,27 +120,25 @@
         
         <!-- Duel Type Toggle -->
         <div class="flex justify-center">
-          <div class="bg-white/10 backdrop-blur-lg rounded-xl p-1 border border-white/20">
-            <div class="flex space-x-1">
-              <button type="button" 
-                      class="duel-type-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-                      data-duel-type="simple"
-                      data-action="click->duel-type#selectType">
-                Simple Duel
-              </button>
-              <button type="button" 
-                      class="duel-type-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-                      data-duel-type="opposed"
-                      data-action="click->duel-type#selectType">
-                Opposed Duel
-              </button>
-              <button type="button" 
-                      class="duel-type-btn px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-                      data-duel-type="opposed_with_tn"
-                      data-action="click->duel-type#selectType">
-                Opposed + TN
-              </button>
-            </div>
+          <div class="duel-type-toggle" data-duel-type-target="toggleContainer">
+            <button type="button" 
+                    class="duel-type-btn"
+                    data-duel-type="simple"
+                    data-action="click->duel-type#selectType">
+              Simple Duel
+            </button>
+            <button type="button" 
+                    class="duel-type-btn"
+                    data-duel-type="opposed"
+                    data-action="click->duel-type#selectType">
+              Opposed Duel
+            </button>
+            <button type="button" 
+                    class="duel-type-btn"
+                    data-duel-type="opposed_with_tn"
+                    data-action="click->duel-type#selectType">
+              Opposed + TN
+            </button>
           </div>
         </div>
         

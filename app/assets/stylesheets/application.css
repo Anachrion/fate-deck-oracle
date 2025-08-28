@@ -100,22 +100,62 @@
 }
 
 /* Duel Type Button Styles */
-.duel-type-btn {
+.duel-type-toggle {
+  position: relative;
   background: rgba(255, 255, 255, 0.1);
-  color: #cbd5e1;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 4px;
+  display: inline-flex;
+  transition: all 0.3s ease;
+}
+
+.duel-type-toggle::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(33.333% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, #10b981, #059669);
+  border-radius: 8px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
+
+.duel-type-toggle[data-active="simple"]::before {
+  transform: translateX(0);
+}
+
+.duel-type-toggle[data-active="opposed"]::before {
+  transform: translateX(94%);
+}
+
+.duel-type-toggle[data-active="opposed_with_tn"]::before {
+  transform: translateX(200%);
+}
+
+.duel-type-btn {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  color: #cbd5e1;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 100px;
+  text-align: center;
 }
 
 .duel-type-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
   color: white;
-  transform: translateY(-1px);
 }
 
 .duel-type-btn.active {
-  background: linear-gradient(135deg, #8b5cf6, #3b82f6);
   color: white;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+  font-weight: 600;
 }

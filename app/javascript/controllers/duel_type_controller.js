@@ -1,22 +1,24 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "targetNumberInput", "defenderInput"]
+  static targets = ["input", "targetNumberInput", "defenderInput", "toggleContainer"]
 
   connect() {
     console.log("DuelType controller connected")
     console.log("Targets found:", {
       input: this.hasInputTarget,
       targetNumberInput: this.hasTargetNumberInputTarget,
-      defenderInput: this.hasDefenderInputTarget
+      defenderInput: this.hasDefenderInputTarget,
+      toggleContainer: this.hasToggleContainerTarget
     })
     
     // Check if all required targets are present
-    if (!this.hasInputTarget || !this.hasTargetNumberInputTarget || !this.hasDefenderInputTarget) {
+    if (!this.hasInputTarget || !this.hasTargetNumberInputTarget || !this.hasDefenderInputTarget || !this.hasToggleContainerTarget) {
       console.error("Missing required targets:", {
         input: this.hasInputTarget,
         targetNumberInput: this.hasTargetNumberInputTarget,
-        defenderInput: this.hasDefenderInputTarget
+        defenderInput: this.hasDefenderInputTarget,
+        toggleContainer: this.hasToggleContainerTarget
       })
       return
     }
@@ -39,6 +41,9 @@ export default class extends Controller {
     // Update hidden input value
     this.inputTarget.value = selectedType
     console.log("Updated input value to:", selectedType)
+    
+    // Update the toggle container data-active attribute for the sliding indicator
+    this.toggleContainerTarget.setAttribute('data-active', selectedType)
     
     // Get the input fields
     const defenderStatInput = this.defenderInputTarget.querySelector('input[name="defender_stat"]')
