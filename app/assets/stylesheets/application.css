@@ -106,7 +106,9 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   padding: 4px;
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
   transition: all 0.3s ease;
 }
 
@@ -115,25 +117,27 @@
   position: absolute;
   top: 4px;
   left: 4px;
-  width: calc(33.333% - 4px);
+  right: 4px;
   height: calc(100% - 8px);
   background: linear-gradient(135deg, #10b981, #059669);
   border-radius: 8px;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
 }
 
 .duel-type-toggle[data-active="simple"]::before {
-  transform: translateX(0);
-  width: calc(33.333% - 10px);
+  left: 4px;
+  right: calc(66.667% + 2.67px);
 }
 
 .duel-type-toggle[data-active="opposed"]::before {
-  transform: translateX(94%);
+  left: calc(33.333% + 2.67px);
+  right: calc(33.333% + 2.67px);
 }
 
 .duel-type-toggle[data-active="opposed_with_tn"]::before {
-  transform: translateX(200%);
+  left: calc(66.667% + 2.67px);
+  right: 4px;
 }
 
 .duel-type-btn {
@@ -142,14 +146,16 @@
   background: transparent;
   color: #cbd5e1;
   border: none;
-  padding: 8px 16px;
+  padding: 8px 12px;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 100px;
   text-align: center;
+  white-space: normal;
+  min-width: 0;
+  line-height: 1.2;
 }
 
 .duel-type-btn:hover {
@@ -452,5 +458,33 @@
     height: 20px;
     font-size: 9px;
     margin-left: 1px;
+  }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .duel-type-toggle {
+    padding: 3px;
+    gap: 3px;
+  }
+  
+  .duel-type-btn {
+    padding: 6px 8px;
+    font-size: 12px;
+    line-height: 1.1;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+  .duel-type-toggle {
+    padding: 2px;
+    gap: 2px;
+  }
+  
+  .duel-type-btn {
+    padding: 4px 6px;
+    font-size: 11px;
+    line-height: 1.1;
   }
 }
