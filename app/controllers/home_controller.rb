@@ -13,28 +13,26 @@ class HomeController < ApplicationController
 
   def calculate
     # Always read the current form values
-    attacker_stat = params[:attacker_stat]&.to_i
-    defender_stat = params[:defender_stat]&.to_i
+    attacker_stat = params[:attacker_stat].presence&.to_i
+    defender_stat = params[:defender_stat].presence&.to_i
+    target_number = params[:target_number].presence&.to_i
     attacker_flips = params[:attacker_modifier]
     defender_flips = params[:defender_modifier]
-    duel_type = params[:duel_type] || "opposed"
-
+    
     result = ::DuelCalculationService
              .new(
-               attacker_stat: attacker_stat,
-               defender_stat: defender_stat,
-               attacker_flips: attacker_flips,
-               defender_flips: defender_flips,
-               duel_type: duel_type,
-               target_number: params[:target_number]&.to_i
+               attacker_stat:,
+               defender_stat:,
+               target_number:,
+               attacker_flips:,
+               defender_flips:,
              )
              .call
 
     duel_data = {
-      attacker_stat: attacker_stat,
-      defender_stat: defender_stat,
-      duel_type: duel_type,
-      target_number: params[:target_number]&.to_i || 0,
+      attacker_stat:,
+      defender_stat:,
+      target_number:,
       global_success_rate: result[:global_success_rate],
       global_success_rate_with_raise: result[:global_success_rate_with_raise]
     }

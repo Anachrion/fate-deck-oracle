@@ -54,7 +54,7 @@ class DuelCalculationService
 
   def simple_duel_results
     attacker_combinations = process_combinations(flips: attacker_flips)
-        
+    
     attacker_combinations.map do |attacker_draw_value|
       # In a simple duel, success is when attacker's total meets or exceeds the target
       (attacker_draw_value + attacker_stat) - target_number
