@@ -5,10 +5,10 @@ class HomeController < ApplicationController
     # Get values from params if they exist (from redirect)
     @attacker_stat = params[:attacker_stat]
     @defender_stat = params[:defender_stat]
+    @target_number = params[:target_number]
     @attacker_modifier = params[:attacker_modifier]
     @defender_modifier = params[:defender_modifier]
     @duel_type = params[:duel_type] || "opposed"
-    @target_number = params[:target_number] || 0
   end
 
   def calculate
@@ -18,6 +18,7 @@ class HomeController < ApplicationController
     target_number = params[:target_number].presence&.to_i
     attacker_flips = params[:attacker_modifier]
     defender_flips = params[:defender_modifier]
+    duel_type = params[:duel_type] || "opposed"
     
     result = ::DuelCalculationService
              .new(
@@ -33,6 +34,9 @@ class HomeController < ApplicationController
       attacker_stat:,
       defender_stat:,
       target_number:,
+      attacker_flips:,
+      defender_flips:,
+      duel_type:,
       global_success_rate: result[:global_success_rate],
       global_success_rate_with_raise: result[:global_success_rate_with_raise]
     }
