@@ -1,16 +1,34 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "targetNumberInput"]
+  static targets = ["input", "targetNumberInput", "defenderInput"]
 
   connect() {
     console.log("DuelType controller connected")
     console.log("Targets found:", {
       input: this.hasInputTarget,
-      inputField: this.hasTargetNumberInputTarget
+      targetNumberInput: this.hasTargetNumberInputTarget,
+      defenderInput: this.hasDefenderInputTarget
     })
+    
+    // Check if all required targets are present
+    if (!this.hasInputTarget || !this.hasTargetNumberInputTarget || !this.hasDefenderInputTarget) {
+      console.error("Missing required targets:", {
+        input: this.hasInputTarget,
+        targetNumberInput: this.hasTargetNumberInputTarget,
+        defenderInput: this.hasDefenderInputTarget
+      })
+      return
+    }
+    
     // Set initial state - default to opposed duel (middle button)
-    this.selectType({ currentTarget: this.element.querySelector('[data-duel-type="opposed"]') })
+    // This will ensure target number is hidden and defender is visible initially
+    const defaultButton = this.element.querySelector('[data-duel-type="opposed"]')
+    if (defaultButton) {
+      this.selectType({ currentTarget: defaultButton })
+    } else {
+      console.error("Could not find default opposed duel button")
+    }
   }
 
   selectType(event) {
@@ -22,23 +40,62 @@ export default class extends Controller {
     this.inputTarget.value = selectedType
     console.log("Updated input value to:", selectedType)
     
-    // Show/hide target number section based on duel type
-    if (selectedType === 'simple' || selectedType === 'opposed_with_tn') {
-      console.log("Showing target number elements")
-      this.targetNumberInputTarget.classList.remove('hidden')
-    } else {
-      console.log("Hiding target number elements")
-      this.targetNumberInputTarget.classList.add('hidden')
+    // Get the input fields
+    const defenderStatInput = this.defenderInputTarget.querySelector('input[name="defender_stat"]')
+    const targetNumberInput = this.targetNumberInputTarget.querySelector('input[name="target_number"]')
+    
+    // Show/hide inputs based on duel type
+    switch (selectedType) {
+      case 'simple':
+        // Simple duel: show attacker + TN, hide defender
+        console.log("Simple duel: showing attacker + TN, hiding defender")
+        this.targetNumberInputTarget.classList.remove('hidden')
+        this.defenderInputTarget.classList.add('hidden')
+        // Remove required attribute for defender in simple duel
+        if (defenderStatInput) {
+          defenderStatInput.removeAttribute('required')
+        }
+        // Add required attribute for target number in simple duel
+        if (targetNumberInput) {
+          targetNumberInput.setAttribute('required', 'required')
+        }
+        break
+      case 'opposed':
+        // Opposed duel: show attacker + defender, hide TN
+        console.log("Opposed duel: showing attacker + defender, hiding TN")
+        this.targetNumberInputTarget.classList.add('hidden')
+        this.defenderInputTarget.classList.remove('hidden')
+        // Add required attribute for defender in opposed duel
+        if (defenderStatInput) {
+          defenderStatInput.setAttribute('required', 'required')
+        }
+        // Remove required attribute for target number in opposed duel
+        if (targetNumberInput) {
+          targetNumberInput.removeAttribute('required')
+        }
+        break
+      case 'opposed_with_tn':
+        // Opposed + TN: show attacker + defender + TN
+        console.log("Opposed + TN: showing attacker + defender + TN")
+        this.targetNumberInputTarget.classList.remove('hidden')
+        this.defenderInputTarget.classList.remove('hidden')
+        // Add required attribute for defender in opposed + TN duel
+        if (defenderStatInput) {
+          defenderStatInput.setAttribute('required', 'required')
+        }
+        // Add required attribute for target number in opposed + TN duel
+        if (targetNumberInput) {
+          targetNumberInput.setAttribute('required', 'required')
+        }
+        break
     }
     
     // Update button styles
     allButtons.forEach(btn => {
       if (btn.dataset.duelType === selectedType) {
-        btn.classList.add('bg-gradient-to-r', 'from-purple-600', 'to-blue-600', 'text-white', 'shadow-lg')
-        btn.classList.remove('text-slate-300', 'hover:text-white', 'hover:bg-white/20')
+        btn.classList.add('active')
       } else {
-        btn.classList.remove('bg-gradient-to-r', 'from-purple-600', 'to-blue-600', 'text-white', 'shadow-lg')
-        btn.classList.add('text-slate-300', 'hover:text-white', 'hover:bg-white/20')
+        btn.classList.remove('active')
       }
     })
   }
