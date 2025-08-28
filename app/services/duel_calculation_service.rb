@@ -3,25 +3,27 @@
 class DuelCalculationService
   FATE_DECK = (1..13).to_a * 4 + [0, 14]
 
-  def initialize(attacker_stat:, defender_stat: nil, target_number: nil, attacker_flips: '', defender_flips: '', duel_type: 'opposed')
+  def initialize(
+    attacker_stat:, 
+    defender_stat: nil, 
+    target_number: nil, 
+    attacker_flips: '', 
+    defender_flips: ''
+    )
     @attacker_stat = attacker_stat
     @defender_stat = defender_stat
     @attacker_flips = attacker_flips
     @defender_flips = defender_flips
     @target_number = target_number
-    @duel_type = duel_type
   end
 
-  attr_reader :attacker_stat, :defender_stat, :attacker_flips, :defender_flips, :target_number, :duel_type
+  attr_reader :attacker_stat, :defender_stat, :attacker_flips, :defender_flips, :target_number
 
   def call
-    results = case duel_type
-              when 'simple'
-                simple_duel_results
-              else
-                opposed_duel_results
-              end
+    check_consistency_params
 
+    results = defender_stat.nil? ? simple_duel_results : opposed_duel_results
+             
     global_success_rate = ((results.count { |value| value >= 0 } / results.size.to_f) * 100).round
     global_success_rate_with_raise = ((results.count { |value| value >= 5 } / results.size.to_f) * 100).round
 
@@ -29,6 +31,34 @@ class DuelCalculationService
       global_success_rate: global_success_rate,
       global_success_rate_with_raise: global_success_rate_with_raise
     }
+  end
+
+  def check_consistency_params
+    # Check that we have either a defender_stat (opposed duel) or target_number (simple duel)
+    raise 'Unknown duel type' if defender_stat.blank? && target_number.blank?      
+
+    # Flips are defined as a string , either "++", "+", "", "-" or "--"
+    [attacker_flips, defender_flips].each do |flips|
+      flip_array = flips.split('')
+      raise 'Unknown flip value' if flip_array.any? { |flip| !['+', '-'].include?(flip) }
+      raise "You can't mix positive and negative flips" if flip_array.uniq.length > 1
+    end
+  end
+  
+  def process_flips(flips:)
+    flip_array = flips.split('')
+    return [1, nil] if flips.empty?
+
+    [flip_array.length + 1, flip_array.first]
+  end
+
+  def simple_duel_results
+    attacker_combinations = process_combinations(flips: attacker_flips)
+        
+    attacker_combinations.map do |attacker_draw_value|
+      # In a simple duel, success is when attacker's total meets or exceeds the target
+      (attacker_draw_value + attacker_stat) - target_number
+    end
   end
 
   def opposed_duel_results
@@ -39,71 +69,25 @@ class DuelCalculationService
 
     attacker_combinations.each do |attacker_draw_value|
       defender_combinations.each do |defender_draw_value|
-        results << (attacker_draw_value + attacker_stat) - (defender_draw_value + defender_stat)
+        final_attacker_value = (attacker_draw_value + attacker_stat)
+        result = final_attacker_value - (defender_draw_value + defender_stat)
+        if target_number && final_attacker_value < target_number
+          result = -1 
+        end
+        results << result
       end
     end
-    results
-  end
-
-  def opposed_duel_with_target_results
-    # For opposed duels with target numbers, we need both defender stat and target number
-    # Success is when attacker's total meets or exceeds both the defender's total AND the target number
-    target = @target_number || 0
-    
-    attacker_combinations = process_combinations(flips: attacker_flips)
-    defender_combinations = process_combinations(flips: defender_flips)
-
-    results = []
-
-    attacker_combinations.each do |attacker_draw_value|
-      defender_combinations.each do |defender_draw_value|
-        attacker_total = attacker_draw_value + attacker_stat
-        defender_total = defender_draw_value + defender_stat
-        target_threshold = [defender_total, target].max
-        
-        # Success is when attacker meets or exceeds the higher of defender total or target
-        results << attacker_total - target_threshold
-      end
-    end
-    results
-  end
-
-  def simple_duel_results
-    # For simple duels, we need a target number
-    # If no target number is provided, default to 0 (basic success)
-    target = @target_number || 0
-    
-    attacker_combinations = process_combinations(flips: attacker_flips)
-    
-    results = []
-    
-    attacker_combinations.each do |attacker_draw_value|
-      # In a simple duel, success is when attacker's total meets or exceeds the target
-      results << (attacker_draw_value + attacker_stat) - target
-    end
-    
     results
   end
 
   def process_combinations(flips:)
-    number_of_cards, flip_symbol = check_flips_consistency(flips: flips)
+    number_of_cards, flip_symbol = process_flips(flips:)
 
     draw_results = combinations(number_of_cards: number_of_cards)
 
     draw_results.map do |combination|
       determine_draw_value(cards: combination, flip_symbol: flip_symbol)
     end
-  end
-
-  # Flips are an array of symbols, either :+ or :-
-  def check_flips_consistency(flips:)
-    flip_array = flips.split('')
-    return [1, nil] if flips.empty?
-
-    raise 'Unknown flip value' if flip_array.any? { |flip| !['+', '-'].include?(flip) }
-    raise "You can't mix positive and negative flips" if flip_array.uniq.length > 1
-
-    [flip_array.length + 1, flip_array.first]
   end
 
   def combinations(number_of_cards:)

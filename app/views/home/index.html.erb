@@ -100,13 +100,12 @@
               
               <!-- Target Number Column (for simple duels) -->
               <div data-duel-type-target="targetNumberInput" class="hidden flex flex-col items-center">
-                <%= form.label :target_number, "Target Number", class: "block text-sm font-semibold text-white mb-2" %>
+                <%= form.label :target_number, "TN", class: "block text-sm font-semibold text-white mb-2" %>
                 <%= form.number_field :target_number, 
                     value: params[:target_number] || 0, 
                     class: "w-24 h-16 px-4 py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-2xl font-bold", 
-                    placeholder: "0-9",
                     min: 0,
-                    max: 9,
+                    max: 20,
                     maxlength: 2 %>
               </div>
             </div>

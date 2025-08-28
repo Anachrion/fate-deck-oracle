@@ -125,6 +125,7 @@
 
 .duel-type-toggle[data-active="simple"]::before {
   transform: translateX(0);
+  width: calc(33.333% - 10px);
 }
 
 .duel-type-toggle[data-active="opposed"]::before {
