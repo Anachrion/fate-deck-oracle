@@ -20,7 +20,8 @@
     <!-- Form Card -->
     <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-2xl border border-white/20 mb-8" data-controller="modifier-cards duel-type">
       <%= form_with url: calculate_path, method: :post, local: false, class: "space-y-6", data: { turbo_stream: true } do |form| %>
-        <div class="flex flex-row justify-center items-center gap-4 sm:gap-6 lg:gap-12">
+                <div class="flex flex-row justify-center items-center">
+          <!-- Attacker Column -->
           <div class="flex flex-col items-center">
             <%= form.label :attacker_stat, "Attacker", class: "block text-sm font-semibold text-white mb-2" %>
             
@@ -64,75 +65,81 @@
                 data: { "modifier-cards-target": "attackerModInput" } %>
           </div>
           
-          <!-- Defender Column -->
-          <div data-duel-type-target="defenderInput" class="flex flex-col items-center">
-            <%= form.label :defender_stat, "Defender", class: "block text-sm font-semibold text-white mb-2" %>
-            
-            <div class="flex items-center">
-              <%= form.number_field :defender_stat, 
-                  value: params[:defender_stat] || @defender_stat, 
-                  class: "w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl md:text-2xl font-bold flex-shrink-0", 
-                  min: 0,
-                  max: 9,
-                  maxlength: 2,
-                  required: true %>
+          <!-- Spacer between attacker and defender group -->
+          <div class="w-8 sm:w-12 lg:w-16"></div>
+          
+          <!-- Defender and TN Group (closer together) -->
+          <div class="flex flex-row items-center gap-2 sm:gap-3 lg:gap-4">
+            <!-- Defender Column -->
+            <div data-duel-type-target="defenderInput" class="flex flex-col items-center">
+              <%= form.label :defender_stat, "Defender", class: "block text-sm font-semibold text-white mb-2" %>
               
-              <!-- Defender Modifier Indicators -->
-              <div class="flex flex-col space-y-2" data-modifier-cards-target="defenderModIndicators">
-                <!-- Indicators will be dynamically added here -->
-              </div>
-            </div>
-            
-            <!-- Defender Modifier Cards -->
-            <div class="flex flex-col items-center space-y-2 mt-2">
-              <label class="text-xs text-slate-400 font-medium">Modifiers</label>
-              <div class="flex space-x-2">
-                <div class="modifier-card negative-card inactive" 
-                     data-modifier-cards-target="defenderModNegative"
-                     data-action="click->modifier-cards#addNegative"
-                     data-input-target="defenderModInput">
-                  <span class="card-symbol">-</span>
-                </div>
-                <div class="modifier-card positive-card inactive" 
-                     data-modifier-cards-target="defenderModPositive"
-                     data-action="click->modifier-cards#addPositive"
-                     data-input-target="defenderModInput">
-                  <span class="card-symbol">+</span>
+              <div class="flex items-center">
+                <%= form.number_field :defender_stat, 
+                    value: params[:defender_stat] || @defender_stat, 
+                    class: "w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl md:text-2xl font-bold flex-shrink-0", 
+                    min: 0,
+                    max: 9,
+                    maxlength: 2,
+                    required: true %>
+                
+                <!-- Defender Modifier Indicators -->
+                <div class="flex flex-col space-y-2" data-modifier-cards-target="defenderModIndicators">
+                  <!-- Indicators will be dynamically added here -->
                 </div>
               </div>
-            </div>
-            
-            <!-- Hidden input for form submission -->
-            <%= form.hidden_field :defender_modifier, 
-                value: params[:defender_modifier] || @defender_modifier || "", 
-                data: { "modifier-cards-target": "defenderModInput" } %>
-          </div>
-
-          <!-- Target Number Column (for simple duels) -->
-          <div data-duel-type-target="targetNumberInput" class="hidden flex flex-col items-center">
-            <%= form.label :target_number,   "TN", class: "block text-sm font-semibold text-white mb-2" %>
-             <div class="flex items-center">
-                <%= form.number_field :target_number, 
-                  value: params[:target_number] || 0, 
-                  class: "w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl md:text-2xl font-bold", 
-                  min: 0,
-                  max: 20,
-                  maxlength: 2 %>
-            </div>
-            
-            <!-- Just a placeholder for height consistency -->
-            <div class="flex flex-col items-center space-y-2 mt-2 opacity-0 pointer-events-none">
-              <label class="text-xs text-slate-400 font-medium">Modifiers</label>
-              <div class="flex space-x-2">
-                <div class="modifier-card negative-card inactive" 
-                  <span class="card-symbol">-</span>
-                </div>
-                <div class="modifier-card positive-card inactive" 
-                  <span class="card-symbol">+</span>
+              
+              <!-- Defender Modifier Cards -->
+              <div class="flex flex-col items-center space-y-2 mt-2">
+                <label class="text-xs text-slate-400 font-medium">Modifiers</label>
+                <div class="flex space-x-2">
+                  <div class="modifier-card negative-card inactive" 
+                       data-modifier-cards-target="defenderModNegative"
+                       data-action="click->modifier-cards#addNegative"
+                       data-input-target="defenderModInput">
+                    <span class="card-symbol">-</span>
+                  </div>
+                  <div class="modifier-card positive-card inactive" 
+                       data-modifier-cards-target="defenderModPositive"
+                       data-action="click->modifier-cards#addPositive"
+                       data-input-target="defenderModInput">
+                    <span class="card-symbol">+</span>
+                  </div>
                 </div>
               </div>
+              
+              <!-- Hidden input for form submission -->
+              <%= form.hidden_field :defender_modifier, 
+                  value: params[:defender_modifier] || @defender_modifier || "", 
+                  data: { "modifier-cards-target": "defenderModInput" } %>
             </div>
             
+            <!-- Target Number Column (for simple duels) -->
+            <div data-duel-type-target="targetNumberInput" class="hidden flex flex-col items-center">
+              <%= form.label :target_number,   "TN", class: "block text-sm font-semibold text-white mb-2" %>
+              <div class="flex items-center">
+                 <%= form.number_field :target_number, 
+                     value: params[:target_number] || 0, 
+                     class: "w-16 h-12 sm:w-20 sm:h-14 md:w-24 md:h-16 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 bg-white/20 border border-white/30 rounded-lg text-white placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent transition-all duration-200 text-center text-lg sm:text-xl md:text-2xl font-bold", 
+                     min: 0,
+                     max: 20,
+                     maxlength: 2 %>
+              </div>
+              
+              <!-- Just a placeholder for height consistency -->
+              <div class="flex flex-col items-center space-y-2 mt-2 opacity-0 pointer-events-none">
+                <label class="text-xs text-slate-400 font-medium">Modifiers</label>
+                <div class="flex space-x-2">
+                  <div class="modifier-card negative-card inactive" 
+                    <span class="card-symbol">-</span>
+                  </div>
+                  <div class="modifier-card positive-card inactive" 
+                    <span class="card-symbol">+</span>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
           </div>
         </div>
         
