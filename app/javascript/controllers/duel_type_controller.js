@@ -9,7 +9,7 @@ export default class extends Controller {
       input: this.hasInputTarget,
       inputField: this.hasTargetNumberInputTarget
     })
-    // Set initial state - default to opposed duel
+    // Set initial state - default to opposed duel (middle button)
     this.selectType({ currentTarget: this.element.querySelector('[data-duel-type="opposed"]') })
   }
 
@@ -22,8 +22,8 @@ export default class extends Controller {
     this.inputTarget.value = selectedType
     console.log("Updated input value to:", selectedType)
     
-    // Show/hide target number section
-    if (selectedType === 'simple') {
+    // Show/hide target number section based on duel type
+    if (selectedType === 'simple' || selectedType === 'opposed_with_tn') {
       console.log("Showing target number elements")
       this.targetNumberInputTarget.classList.remove('hidden')
     } else {

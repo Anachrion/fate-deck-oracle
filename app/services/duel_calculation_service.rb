@@ -45,6 +45,29 @@ class DuelCalculationService
     results
   end
 
+  def opposed_duel_with_target_results
+    # For opposed duels with target numbers, we need both defender stat and target number
+    # Success is when attacker's total meets or exceeds both the defender's total AND the target number
+    target = @target_number || 0
+    
+    attacker_combinations = process_combinations(flips: attacker_flips)
+    defender_combinations = process_combinations(flips: defender_flips)
+
+    results = []
+
+    attacker_combinations.each do |attacker_draw_value|
+      defender_combinations.each do |defender_draw_value|
+        attacker_total = attacker_draw_value + attacker_stat
+        defender_total = defender_draw_value + defender_stat
+        target_threshold = [defender_total, target].max
+        
+        # Success is when attacker meets or exceeds the higher of defender total or target
+        results << attacker_total - target_threshold
+      end
+    end
+    results
+  end
+
   def simple_duel_results
     # For simple duels, we need a target number
     # If no target number is provided, default to 0 (basic success)

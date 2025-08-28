@@ -35,6 +35,15 @@
             <span class="text-slate-300 font-medium">Defender Value:</span>
             <span class="text-white font-bold text-lg"><%= duel_data && duel_data[:defender_stat] %></span>
           </div>
+        <% elsif duel_data && duel_data[:duel_type] == 'opposed_with_tn' %>
+          <div class="flex justify-between items-center py-3 px-4 bg-white/5 rounded-lg">
+            <span class="text-slate-300 font-medium">Defender Value:</span>
+            <span class="text-white font-bold text-lg"><%= duel_data && duel_data[:defender_stat] %></span>
+          </div>
+          <div class="flex justify-between items-center py-3 px-4 bg-white/5 rounded-lg">
+            <span class="text-slate-300 font-medium">Target Number:</span>
+            <span class="text-white font-bold text-lg"><%= duel_data && duel_data[:target_number] %></span>
+          </div>
         <% else %>
           <div class="flex justify-between items-center py-3 px-4 bg-white/5 rounded-lg">
             <span class="text-slate-300 font-medium">Target Number:</span>
