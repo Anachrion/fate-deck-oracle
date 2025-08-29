@@ -9,10 +9,6 @@
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-    <!-- Fallback for Tailwind CSS if asset pipeline fails -->
-    <% if Rails.env.production? && !Rails.application.assets.find_asset('tailwind.css') %>
-      <link rel="stylesheet" href="/assets/tailwind.css">
-    <% end %>
     <!-- Favicon and App Icons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   </head>
